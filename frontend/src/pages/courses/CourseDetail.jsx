@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Box, Text, Heading, VStack, Image, Spinner, HStack, Button } from '@chakra-ui/react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Box, Text, Heading, VStack, Image, Spinner, HStack, Button, useToast } from '@chakra-ui/react';
 import { useCourseStore } from '../../store/courseStore.jsx';
 import { useAuthStore } from '../../store/authStore.jsx';
 
 const CourseDetailPage = () => {
   const { id } = useParams();
-  const { courses, fetchCourses } = useCourseStore();
+  const { courses, fetchCourses, deleteCourse, updateCourse } = useCourseStore();
   const { user } = useAuthStore();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const toast = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,10 +51,28 @@ const CourseDetailPage = () => {
   }
 
   const isAuthor = course.author?._id === user?.id;
-  console.log(isAuthor);
 
-  const handleDelete = () => {
-
+  const handleDelete = async (cid) => {
+    const { success, message } = await deleteCourse(cid);
+    console.log(success, " e ", message);
+    if(!success) {
+      toast({
+        title: 'Error',
+        description: message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      })
+    } else {
+      toast({
+        title: 'Course Deleted',
+        description: message,
+        status: 'success',
+        duration: 3000,
+        isClosable: true
+      })
+    }
+    navigate("/");
   }
 
   const handleEdit = () => {
@@ -77,7 +98,7 @@ const CourseDetailPage = () => {
             Edit
           </Button>
           <Button
-            onClick={handleDelete}
+            onClick={() => handleDelete(course._id)}
             colorScheme={"orange"}
             width={"25vw"}
           >

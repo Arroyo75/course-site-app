@@ -23,5 +23,14 @@ export const useCourseStore = create((set) => ({
     const res = await apiFetch("api/courses");
     const data = await res.json();
     set({ courses: data.data });
+  },
+  deleteCourse: async (cid) => {
+    const res = await apiFetch(`/api/courses/${cid}`, {
+      method: "DELETE"
+    });
+    const data = await res.json();
+    if(!data.success) return { success: false, message: data.message };
+    set(state => ({ courses: state.courses.filter( course => course._id !== cid) }));
+    return { success: true, message: data.message }
   }
-}))
+}));

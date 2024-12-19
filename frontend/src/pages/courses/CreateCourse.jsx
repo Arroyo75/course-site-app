@@ -32,7 +32,8 @@ const CreateCourse = () => {
                 isClosable: true
             })
         }
-        setNewCourse({title: "", description: "", image: ""})
+        setNewCourse({title: "", description: "", image: ""});
+        
     };
 
     return (
