@@ -11,7 +11,6 @@ const HomePage = () => {
     useEffect(() => {
         fetchCourses();
     }, [fetchCourses]);
-    console.log("courses", courses);
 
     return (
         <Container maxW='container.xl' py={12}>

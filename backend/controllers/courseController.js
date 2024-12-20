@@ -28,7 +28,7 @@ export const createCourse = async (req, res) => {
     try {
         await newCourse.save();
         res.status(201).json({ success: true, data: newCourse});
-    } catch {
+    } catch(error) {
         console.error("Error creating course: ", error.message);
         res.status(400).json({ succes: false, message: "Server error"});
     }

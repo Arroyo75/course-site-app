@@ -6,8 +6,7 @@ const lectureSchema = new mongoose.Schema({
         required: true
     },
     filePath: {
-        type: String,
-        required: true
+        type: String
     },
     course: {
         type: mongoose.Schema.Types.ObjectId,
