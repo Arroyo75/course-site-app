@@ -50,7 +50,7 @@ export const deleteLecture = async (req, res) => {
   const { id } = req.params;
 
   if(!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ success: false, "Invalid Lecture Id" });
+    return res.status(404).json({ success: false, message: "Invalid Lecture Id" });
   }
 
   try {
