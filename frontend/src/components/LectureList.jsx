@@ -1,13 +1,18 @@
-import { Box, HStack } from '@chakra-ui/react';
+import { Box, HStack, Heading, VStack } from '@chakra-ui/react';
 
 const LectureList = () => {
 
 
   return (
-    <Box>
-      <HStack>
-
-      </HStack>
+    <Box maxWidth={"75%"}>
+      <VStack>
+        <Heading as={"h1"} size={"xl"} textAlign={"center"}>
+          Lectures
+        </Heading>
+        <HStack>
+          
+        </HStack>
+      </VStack>
     </Box>
   )
 }

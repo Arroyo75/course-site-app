@@ -2,8 +2,15 @@ import mongoose from 'mongoose';
 import Lecture from '../models/Lecture.js';
 
 export const getLectures = async (req, res) => {
+
+  const { course_id } = req.params;
+
+  if(!mongoose.Schema.ObjectId.isValid(course_id)) {
+    return res.status(404).json({ success: false, messsage: "Invalid Course Id" });
+  }
+
   try {
-    const lectures = await Lecture.find({});
+    const lectures = await Lecture.find({ course: course_id });
     res.status(200).json({ success: true, data: lectures });
   } catch (error) {
     console.log("Error fetching lectures: ", error.message);
@@ -12,15 +19,19 @@ export const getLectures = async (req, res) => {
 };
 
 export const createLecture = async (req, res) => {
-  const lecture = req.body;
+  const { title, course } = req.body;
 
-  if(!lecture.title) {
+  if(!title || !course) {
     return res.status(400).json({ success: false, message: "Please provide all fields" });
   }
 
-  const newLecture = new Lecture(lecture);
-
   try {
+    
+    const newLecture = new Lecture({
+      title,
+      course
+    });
+
     await newLecture.save();
     res.status(201).json({ success: true, data: newLecture });
   } catch(error) {
