@@ -5,8 +5,8 @@ export const getLectures = async (req, res) => {
 
   const { course_id } = req.params;
 
-  if(!mongoose.Schema.ObjectId.isValid(course_id)) {
-    return res.status(404).json({ success: false, messsage: "Invalid Course Id" });
+  if(!mongoose.Types.ObjectId.isValid(course_id)) {
+    return res.status(404).json({ success: false, message: "Invalid Course Id" });
   }
 
   try {
@@ -19,9 +19,9 @@ export const getLectures = async (req, res) => {
 };
 
 export const createLecture = async (req, res) => {
-  const { title, course } = req.body;
+  const { title, filePath, course } = req.body;
 
-  if(!title || !course) {
+  if(!title || !filePath || !course) {
     return res.status(400).json({ success: false, message: "Please provide all fields" });
   }
 
@@ -29,6 +29,7 @@ export const createLecture = async (req, res) => {
     
     const newLecture = new Lecture({
       title,
+      filePath,
       course
     });
 
@@ -45,7 +46,7 @@ export const updateLecture = async (req, res) => {
   const lecture = req.body;
 
   if(!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ succecss: false, message: "Invalid Lecture Id" });
+    return res.status(404).json({ success: false, message: "Invalid Lecture Id" });
   }
 
   try {
@@ -69,6 +70,6 @@ export const deleteLecture = async (req, res) => {
     res.status(200).json({ success: true, message: "Deleted" });
   } catch (error) {
     console.log("Error deleting lecture", error.message);
-    res.status(500).json({ success: false, messsage: "Server error"});
+    res.status(500).json({ success: false, message: "Server error"});
   }
 }

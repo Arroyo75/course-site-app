@@ -116,7 +116,7 @@ const CourseDetailPage = () => {
         </VStack>
         </Box>
         <Box width="50%" py={12} px={6} bg="gray.900" color="white" rounded="lg" shadow="lg">
-          <LectureList></LectureList>
+          <LectureList course={course} />
         </Box>
       </HStack>
     </Box>

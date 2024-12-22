@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { apiFetch } from './authStore.jsx';
 
-export const lectureStore = create((set) => ({
+export const useLectureStore = create((set) => ({
   lectures: [],
   setLectures: (lectures) => set({ lectures }),
   createLecture: async (newLecture, cid) => {
@@ -13,7 +13,11 @@ export const lectureStore = create((set) => ({
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({newLecture, course: cid})
+      body: JSON.stringify({
+        title: newLecture.title,
+        filePath: newLecture.filePath,
+        course: cid
+      })
     });
     const data = await res.json();
     set((state) => ({ lectures: [ ...state.lectures, data.data]}));
@@ -25,7 +29,7 @@ export const lectureStore = create((set) => ({
     set({lectures: data.data});
   },
   deleteLecture: async (lid) => {
-    const res = await apiFetch(`/api/fetch/${lid}`, {
+    const res = await apiFetch(`/api/lectures/${lid}`, {
       method: "DELETE"
     });
     const data = await res.json();
