@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useDisclosure, useToast, Box, Text, Heading, VStack, Button, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, Input, ModalFooter } from '@chakra-ui/react';
+import { useDisclosure, useToast, Box, Text, Heading, VStack, Button, HStack, IconButton, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, Input, ModalFooter } from '@chakra-ui/react';
+import { EditIcon, DeleteIcon, DownloadIcon } from '@chakra-ui/icons';
 import { useLectureStore } from '../store/lectureStore.jsx';
 import { useAuthStore } from '../store/authStore.jsx';
 
@@ -10,9 +11,10 @@ const LectureList = ({ course }) => {
     filePath: ""
   })
 
-  const { fetchLectures, createLecture, lectures } = useLectureStore();
-  const { user } = useAuthStore();
+  const { fetchLectures, createLecture, deleteLecture, updateLecture, lectures } = useLectureStore();
+  const { user, isAuthenticated } = useAuthStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isUpdating, setIsUpdating] = useState(false); //Manage create/update modal
   const toast = useToast();
 
   useEffect(() => {
@@ -21,7 +23,6 @@ const LectureList = ({ course }) => {
     }
   }, [course]);
 
-  console.log(course._id);
   const isAuthor = course?.author?._id === user?.id
 
   const handleCreateLecture = async (cid, newLecture) => {
@@ -44,6 +45,53 @@ const LectureList = ({ course }) => {
         isClosable: true
       })
     }
+    setNewLecture({title: "", filePath: ""});
+  }
+
+  const handleDeleteLecture = async (lid) => {
+    const { success, message } = await deleteLecture(lid);
+    if(!success) {
+      toast({
+        title: 'Error',
+        description: message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      })
+    } else {
+      toast({
+        title: "Lecture Deleted",
+        description: message,
+        status: "success",
+        duration: 3000,
+        isClosable: true
+      })
+    }
+  }
+
+  const handleUpdateLecture = async (lid, newLecture) => {
+    console.log("11");
+    const { success, message } = await updateLecture(newLecture, lid);
+    console.log("22");
+    onClose();
+    if(!success) {
+      toast({
+        title: 'Error',
+        description: message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      })
+    } else {
+      toast({
+        title: "Lecture Updated",
+        description: message,
+        status: "success",
+        duration: 3000,
+        isClosable: true
+      })
+    }
+    setNewLecture({title: "", filePath: ""});
   }
 
   return (
@@ -57,11 +105,28 @@ const LectureList = ({ course }) => {
             <Box 
               key={lecture._id}
               p={4}
-              bg="gray.700"
+              colorscheme="white"
               borderRadius="md"
-              _hover={{ bg: 'gray.600' }}
             >
-              <Text>{lecture.title}</Text>
+              <HStack>
+                <Text>{lecture.title}</Text>
+                {isAuthenticated ? (
+                  <IconButton icon={<DownloadIcon />} />
+                ) : (console.log("22"))}
+                {isAuthor ? (
+                  <HStack>
+                    <IconButton
+                      icon={<EditIcon />}
+                      onClick={() => {
+                        setNewLecture(lecture);
+                        setIsUpdating(true);
+                        onOpen();
+                      }}
+                    />
+                    <IconButton icon={<DeleteIcon />} onClick={() => handleDeleteLecture(lecture._id)}/>
+                  </HStack>
+                ) : (console.log("10"))}
+              </HStack>
             </Box>
           ))}
           {lectures.length === 0 && (
@@ -71,7 +136,10 @@ const LectureList = ({ course }) => {
           )}
           {isAuthor ? (
           <Button
-            onClick={onOpen}
+            onClick={() => {
+              setIsUpdating(false);
+              onOpen();
+            }}
             p={4}
             bg="gray.700"
             borderRadius="md"
@@ -85,7 +153,7 @@ const LectureList = ({ course }) => {
       <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Create Lecture</ModalHeader>
+                <ModalHeader>{isUpdating ? "Update Lecture" : "Create Lecture"}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     <VStack spacing={4}>
@@ -106,9 +174,15 @@ const LectureList = ({ course }) => {
                     </VStack>
                 </ModalBody>
                 <ModalFooter>
-                    <Button colorScheme='blue' mr={3} onClick={() => handleCreateLecture(course._id, newLecture)} >
-                        Create
+                  {isUpdating ? (
+                    <Button colorScheme='blue' mr={3} onClick={() => handleUpdateLecture(newLecture._id, newLecture)} >
+                      Update
                     </Button>
+                  ) : (
+                    <Button colorScheme='blue' mr={3} onClick={() => handleCreateLecture(course._id, newLecture)} >
+                      Create
+                    </Button>
+                  )}
                     <Button variant='ghost' onClick={onClose}>
                         Close
                     </Button>

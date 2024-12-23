@@ -42,7 +42,8 @@ export const createLecture = async (req, res) => {
 };
 
 export const updateLecture = async (req, res) => {
-  const {id} = req.params;
+  console.log("66");
+  const { id } = req.params;
   const lecture = req.body;
 
   if(!mongoose.Types.ObjectId.isValid(id)) {
@@ -50,7 +51,9 @@ export const updateLecture = async (req, res) => {
   }
 
   try {
+    console.log("77");
     const updatedLecture = await Lecture.findByIdAndUpdate(id, lecture, {new: true});
+    console.log("88");
     res.status(200).json({ success: true, data: updatedLecture});
   } catch (error) {
     console.log("Error updating lecture: ", error.message);

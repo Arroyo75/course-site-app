@@ -39,5 +39,29 @@ export const useLectureStore = create((set) => ({
 
     set(state => ({ lectures: state.lectures.filter( lecture => lecture._id !== lid)}));
     return { success: true, message: data.message}
+  },
+  updateLecture: async (updatedLecture, lid) => {
+    if(!updatedLecture.title) {
+      return { success: false, message: "Please fill all fields"};
+    }
+
+    console.log("33");
+    const res = await apiFetch(`/api/lectures/${lid}`, {
+      method: "PUT",
+      headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(updatedLecture)
+    });
+    console.log("44");
+    
+    const data = await res.json();
+
+    console.log("55");
+    if(!data.success)
+      return { success: false, message: data.message }
+
+    set(state => ({ lectures: state.lectures.map((lecture) => (lecture._id === lid ? data.data : lecture))}))
+    return { success: true, message: data.message }
   }
 }));

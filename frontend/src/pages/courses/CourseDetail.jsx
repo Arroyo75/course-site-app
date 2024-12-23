@@ -55,7 +55,6 @@ const CourseDetailPage = () => {
 
   const handleDelete = async (cid) => {
     const { success, message } = await deleteCourse(cid);
-    console.log(success, " e ", message);
     if(!success) {
       toast({
         title: 'Error',
