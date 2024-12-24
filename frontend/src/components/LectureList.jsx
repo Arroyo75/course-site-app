@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useDisclosure, useToast, Box, Text, Heading, VStack, Button, HStack, IconButton, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, Input, ModalFooter } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon, DownloadIcon } from '@chakra-ui/icons';
 import { useLectureStore } from '../store/lectureStore.jsx';
@@ -21,7 +22,7 @@ const LectureList = ({ course }) => {
     if(course?._id) {
       fetchLectures(course._id);
     }
-  }, [course]);
+  }, [course, fetchLectures]);
 
   const isAuthor = course?.author?._id === user?.id
 
@@ -70,9 +71,7 @@ const LectureList = ({ course }) => {
   }
 
   const handleUpdateLecture = async (lid, newLecture) => {
-    console.log("11");
     const { success, message } = await updateLecture(newLecture, lid);
-    console.log("22");
     onClose();
     if(!success) {
       toast({
@@ -110,10 +109,10 @@ const LectureList = ({ course }) => {
             >
               <HStack>
                 <Text>{lecture.title}</Text>
-                {isAuthenticated ? (
+                {isAuthenticated && (
                   <IconButton icon={<DownloadIcon />} />
-                ) : (console.log("22"))}
-                {isAuthor ? (
+                )}
+                {isAuthor && (
                   <HStack>
                     <IconButton
                       icon={<EditIcon />}
@@ -125,7 +124,7 @@ const LectureList = ({ course }) => {
                     />
                     <IconButton icon={<DeleteIcon />} onClick={() => handleDeleteLecture(lecture._id)}/>
                   </HStack>
-                ) : (console.log("10"))}
+                )}
               </HStack>
             </Box>
           ))}
@@ -134,7 +133,7 @@ const LectureList = ({ course }) => {
               No lectures found
             </Text>
           )}
-          {isAuthor ? (
+          {isAuthor && (
           <Button
             onClick={() => {
               setIsUpdating(false);
@@ -147,7 +146,7 @@ const LectureList = ({ course }) => {
           >
             <Text>Add Lecture</Text>
           </Button>
-          ) : (console.log("1")) }
+          )}
         </VStack>
       </VStack>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -191,6 +190,19 @@ const LectureList = ({ course }) => {
         </Modal>
     </Box>
   )
+}
+
+LectureList.propTypes = {
+  course: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    filePath: PropTypes.string,
+    author: PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired
+    })
+  })
 }
 
 export default LectureList;

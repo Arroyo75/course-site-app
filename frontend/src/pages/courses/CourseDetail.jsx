@@ -7,7 +7,7 @@ import LectureList from '../../components/LectureList.jsx';
 
 const CourseDetailPage = () => {
   const { id } = useParams();
-  const { courses, fetchCourses, deleteCourse, updateCourse } = useCourseStore();
+  const { courses, fetchCourses, deleteCourse } = useCourseStore();
   const { user } = useAuthStore();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);

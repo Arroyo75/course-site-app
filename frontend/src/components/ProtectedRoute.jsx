@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore.jsx';
 
@@ -10,5 +11,9 @@ const ProtectedRoute = ({ children }) => {
 
   return children;
 }
+
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired
+};
 
 export default ProtectedRoute;

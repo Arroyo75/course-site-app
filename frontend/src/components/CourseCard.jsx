@@ -1,5 +1,6 @@
+import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import { Box, HStack, Image, VStack, Heading, Text } from '@chakra-ui/react';
+import { Box, Image, Heading, Text } from '@chakra-ui/react';
 
 const CourseCard = ({ course }) => {
 
@@ -15,7 +16,7 @@ const CourseCard = ({ course }) => {
       _hover={{ transform: "translateY(-5px)", shadow: "x1"}}
       bg='gray.800'
     >
-      <Image src={course.image} alt={course.name}
+      <Image src={course.image} alt={course.title}
         h= {48} w='full'
         objectFit='cover' />
       <Box p={4}>
@@ -28,6 +29,17 @@ const CourseCard = ({ course }) => {
       </Box>
     </Box>
   )
+}
+
+CourseCard.propTypes = {
+  course: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+    author: PropTypes.shape({
+      name: PropTypes.string.isRequired
+    })
+  })
 }
 
 export default CourseCard;

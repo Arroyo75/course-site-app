@@ -45,7 +45,6 @@ export const useLectureStore = create((set) => ({
       return { success: false, message: "Please fill all fields"};
     }
 
-    console.log("33");
     const res = await apiFetch(`/api/lectures/${lid}`, {
       method: "PUT",
       headers: {
@@ -53,11 +52,9 @@ export const useLectureStore = create((set) => ({
 			},
 			body: JSON.stringify(updatedLecture)
     });
-    console.log("44");
     
     const data = await res.json();
 
-    console.log("55");
     if(!data.success)
       return { success: false, message: data.message }
 
