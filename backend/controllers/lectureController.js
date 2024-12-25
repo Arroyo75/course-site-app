@@ -42,7 +42,6 @@ export const createLecture = async (req, res) => {
 };
 
 export const updateLecture = async (req, res) => {
-  console.log("66");
   const { id } = req.params;
   const lecture = req.body;
 
@@ -51,9 +50,7 @@ export const updateLecture = async (req, res) => {
   }
 
   try {
-    console.log("77");
     const updatedLecture = await Lecture.findByIdAndUpdate(id, lecture, {new: true});
-    console.log("88");
     res.status(200).json({ success: true, data: updatedLecture});
   } catch (error) {
     console.log("Error updating lecture: ", error.message);

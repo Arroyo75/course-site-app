@@ -95,25 +95,40 @@ const LectureList = ({ course }) => {
 
   return (
     <Box maxWidth={"75%"}>
-      <VStack spacing={4} align="stretch">
-        <Heading as={"h1"} size={"xl"} textAlign={"center"}>
+      <VStack spacing={6} align="stretch">
+        <Heading as={"h1"} size={"xl"} textAlign={"center"} color="orange.700" mb={4}>
           Lectures
         </Heading>
-        <VStack spacing={3} align="stretch">
+        <VStack spacing={4} align="stretch">
           {lectures.map((lecture) => (
             <Box 
               key={lecture._id}
               p={4}
-              colorscheme="white"
-              borderRadius="md"
+              bg="white"
+              borderRadius="lg"
+              boxShadow="md"
+              border="1px"
+              borderColor="oragne.100"
+              transition="all 0.2s"
+              _hover={{
+                transform: "translateY(-2px)",
+                boxShadow: "lg",
+                borderColor: "orange.200" 
+              }}
             >
-              <HStack>
-                <Text>{lecture.title}</Text>
+              <HStack justify="space-between">
+                <Text fontSize="lg" fontWeight="medium" color="gray.700">{lecture.title}</Text>
                 {isAuthenticated && (
-                  <IconButton icon={<DownloadIcon />} />
+                  <IconButton
+                    icon={<DownloadIcon />}
+                    colorScheme="orange"
+                    variant="ghost"
+                    size="sm"
+                    _hover={{ bg: 'orange.50' }}
+                  />
                 )}
                 {isAuthor && (
-                  <HStack>
+                  <HStack spacing={2}>
                     <IconButton
                       icon={<EditIcon />}
                       onClick={() => {
@@ -121,6 +136,10 @@ const LectureList = ({ course }) => {
                         setIsUpdating(true);
                         onOpen();
                       }}
+                      colorScheme="blue"
+                        variant="ghost"
+                        size="sm"
+                        _hover={{ bg: 'blue.50' }}
                     />
                     <IconButton icon={<DeleteIcon />} onClick={() => handleDeleteLecture(lecture._id)}/>
                   </HStack>
@@ -129,7 +148,7 @@ const LectureList = ({ course }) => {
             </Box>
           ))}
           {lectures.length === 0 && (
-            <Text fontSize='xl' textAlign={"center"} fontWeight='bold' color='gray.500'>
+            <Text fontSize='xl' textAlign={"center"} fontWeight='bold' color='gray.400' py={8}>
               No lectures found
             </Text>
           )}
@@ -139,10 +158,13 @@ const LectureList = ({ course }) => {
               setIsUpdating(false);
               onOpen();
             }}
-            p={4}
-            bg="gray.700"
-            borderRadius="md"
-            _hover={{ bg: 'gray.600' }}
+            size="lg"
+            bg="orange.500"
+            color="white"
+            _hover={{ bg: 'orange.600' }}
+            _active={{ bg: 'orange.700' }}
+            boxShadow="sm"
+            mt={4}
           >
             <Text>Add Lecture</Text>
           </Button>
