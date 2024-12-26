@@ -96,7 +96,7 @@ const LectureList = ({ course }) => {
   return (
     <Box maxWidth={"75%"}>
       <VStack spacing={6} align="stretch">
-        <Heading as={"h1"} size={"xl"} textAlign={"center"} color="orange.700" mb={4}>
+        <Heading as={"h1"} size={"xl"} textAlign={"center"} color="orange.500" mb={4}>
           Lectures
         </Heading>
         <VStack spacing={4} align="stretch">
@@ -104,11 +104,11 @@ const LectureList = ({ course }) => {
             <Box 
               key={lecture._id}
               p={4}
-              bg="white"
+              bg="gray.800"
               borderRadius="lg"
               boxShadow="md"
               border="1px"
-              borderColor="oragne.100"
+              borderColor="orange.300"
               transition="all 0.2s"
               _hover={{
                 transform: "translateY(-2px)",
@@ -117,7 +117,7 @@ const LectureList = ({ course }) => {
               }}
             >
               <HStack justify="space-between">
-                <Text fontSize="lg" fontWeight="medium" color="gray.700">{lecture.title}</Text>
+                <Text fontSize="lg" fontWeight="medium" color="orange.300">{lecture.title}</Text>
                 {isAuthenticated && (
                   <IconButton
                     icon={<DownloadIcon />}
