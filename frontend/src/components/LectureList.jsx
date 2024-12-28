@@ -118,32 +118,44 @@ const LectureList = ({ course }) => {
             >
               <HStack justify="space-between">
                 <Text fontSize="lg" fontWeight="medium" color="orange.300">{lecture.title}</Text>
-                {isAuthenticated && (
-                  <IconButton
-                    icon={<DownloadIcon />}
-                    colorScheme="orange"
-                    variant="ghost"
-                    size="sm"
-                    _hover={{ bg: 'orange.50' }}
-                  />
-                )}
-                {isAuthor && (
-                  <HStack spacing={2}>
+                <HStack spacing={3}>
+                  {isAuthenticated && (
                     <IconButton
-                      icon={<EditIcon />}
-                      onClick={() => {
-                        setNewLecture(lecture);
-                        setIsUpdating(true);
-                        onOpen();
-                      }}
-                      colorScheme="blue"
+                      icon={<DownloadIcon />}
+                      fontSize={20}
+                      colorScheme="green"
+                      variant="ghost"
+                      size="sm"
+                      _hover={{ bg: 'gray.700' }}
+                    />
+                  )}
+                  {isAuthor && (
+                    <HStack spacing={3}>
+                      <IconButton
+                        icon={<EditIcon />}
+                        onClick={() => {
+                          setNewLecture(lecture);
+                          setIsUpdating(true);
+                          onOpen();
+                        }}
+                        fontSize={20}
+                        colorScheme="blue"
+                          variant="ghost"
+                          size="sm"
+                          _hover={{ bg: 'gray.700' }}
+                      />
+                      <IconButton
+                        icon={<DeleteIcon />}
+                        onClick={() => handleDeleteLecture(lecture._id)}
+                        fontSize={20}
+                        colorScheme="red"
                         variant="ghost"
                         size="sm"
-                        _hover={{ bg: 'blue.50' }}
-                    />
-                    <IconButton icon={<DeleteIcon />} onClick={() => handleDeleteLecture(lecture._id)}/>
-                  </HStack>
-                )}
+                        _hover={{ bg: 'gray.700'}}
+                      />
+                    </HStack>
+                  )}
+                </HStack>
               </HStack>
             </Box>
           ))}
