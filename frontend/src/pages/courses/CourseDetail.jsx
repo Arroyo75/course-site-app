@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Text, Heading, VStack, Image, Spinner, HStack, Button, useToast } from '@chakra-ui/react';
+import { Box, Text, Heading, VStack, Flex, Image, Spinner, HStack, Button, useToast } from '@chakra-ui/react';
 import { useCourseStore } from '../../store/courseStore.jsx';
 import { useAuthStore } from '../../store/authStore.jsx';
 import LectureList from '../../components/LectureList.jsx';
@@ -81,43 +81,43 @@ const CourseDetailPage = () => {
 
   return (
     <Box maxW="container.xl" mx="auto">
-      <HStack align={"flex-start"}>
-        <Box width="50%" py={12} px={6} bg="gray.900" color="white" rounded="lg" shadow="lg">
-        <VStack spacing={6}>
-          <Image src={course.image} alt={course.title} w="full" h={64} objectFit="cover" rounded="lg" />
-          <Heading>{course.title}</Heading>
-          <Text fontSize="lg">{course.description}</Text>
-          <Text fontSize="md" color="gray.400">
-            by {course.author?.name || "Unknown"}
-          </Text>
-          {isAuthor ? (
-            <HStack spacing={4}>
-            <Button
-              onClick={handleEdit}
-              colorScheme={"orange"}
-              width={"25vw"}
-            >
-              Edit
-            </Button>
-            <Button
-              onClick={() => handleDelete(course._id)}
-              colorScheme={"orange"}
-              width={"25vw"}
-            >
-              Delete
-            </Button>
-          </HStack>
-          ) : (
-            <Button>
-              Enroll
-            </Button>
-          )}
-        </VStack>
+      <Flex align={"flex-start"} flexDir={{ base: 'column', md: 'row'}}>
+        <Box width={{base: "100%", md: "50%"}} py={12} px={6} bg="gray.900" color="white" rounded="lg" shadow="lg">
+          <VStack spacing={6}>
+            <Image src={course.image} alt={course.title} w="full" h={64} objectFit="cover" rounded="lg" />
+            <Heading>{course.title}</Heading>
+            <Text fontSize="lg">{course.description}</Text>
+            <Text fontSize="md" color="gray.400">
+              by {course.author?.name || "Unknown"}
+            </Text>
+            {isAuthor ? (
+              <HStack spacing={4}>
+              <Button
+                onClick={handleEdit}
+                colorScheme={"orange"}
+                width={"20vw"}
+              >
+                Edit
+              </Button>
+              <Button
+                onClick={() => handleDelete(course._id)}
+                colorScheme={"orange"}
+                width={"20vw"}
+              >
+                Delete
+              </Button>
+            </HStack>
+            ) : (
+              <Button>
+                Enroll
+              </Button>
+            )}
+          </VStack>
         </Box>
-        <Box width="50%" py={12} px={6} bg="gray.900" color="white" rounded="lg" shadow="lg">
+        <Box width={{base: "100%", md: "50%"}} py={12} px={6} bg="gray.900" color="white" rounded="lg" shadow="lg" display="flex" flexDirection="column" alignItems="center">
           <LectureList course={course} />
         </Box>
-      </HStack>
+      </Flex>
     </Box>
   );
 };

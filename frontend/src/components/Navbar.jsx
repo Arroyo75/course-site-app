@@ -22,15 +22,15 @@ const Navbar = () => {
                 justifyContent={"space-between"}
                 flexDir={{
                     base:"column",
-                    sm:"row"
+                    md:"row"
                 }}
                 gap={{
-                    sm: 24,
+                    md: 24,
                     base: 2
                 }}
             >
                 <Text
-                    fontSize={{ base:"25", sm:"32"}}
+                    fontSize={{ base:"25", md:"32"}}
                     fontWeight={"bold"}
                     textTransform={"uppercase"}
                     textAlign={"center"}
@@ -63,7 +63,7 @@ const Navbar = () => {
                             <Button
                             onClick={() => navigate("/register")}
                             variant={"link"}
-                            fontSize={{ base:"16", sm:"16"}}
+                            fontSize={{ base:"16", md:"16"}}
                             fontWeight={"bold"}
                             textAlign={"center"}
                             bg={"gray.900"}
@@ -78,7 +78,7 @@ const Navbar = () => {
                             <Button
                                 onClick={() => navigate("/login")}
                                 variant={"link"}
-                                fontSize={{ base:"16", sm:"16"}}
+                                fontSize={{ base:"16", md:"16"}}
                                 fontWeight={"bold"}
                                 textAlign={"center"}
                                 bg={"gray.900"}
@@ -95,7 +95,7 @@ const Navbar = () => {
                         <HStack spacing={4} alignItems={"center"}>
                             <Button
                                 onClick={() => navigate("/course/create")}
-                                fontSize={{ base:"16", sm:"16"}}
+                                fontSize={{ base:"16", md:"16"}}
                                 fontWeight={"bold"}
                                 textAlign={"center"}
                                 bgGradient={"linear(to-r, orange.400, red.500)"}
@@ -107,7 +107,7 @@ const Navbar = () => {
                                 Start Teaching
                             </Button>
                             <Button
-                            fontSize={{ base:"16", sm:"16"}}
+                            fontSize={{ base:"16", md:"16"}}
                                 fontWeight={"bold"}
                                 textAlign={"center"}
                                 bgGradient={"linear(to-r, orange.400, red.500)"}
@@ -121,7 +121,7 @@ const Navbar = () => {
                             <Button
                                 onClick={handleLogout}
                                 variant={"link"}
-                                fontSize={{ base:"16", sm:"16"}}
+                                fontSize={{ base:"16", md:"16"}}
                                 fontWeight={"bold"}
                                 textAlign={"center"}
                                 bg={"gray.900"}
