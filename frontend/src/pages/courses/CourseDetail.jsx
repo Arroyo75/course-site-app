@@ -109,7 +109,19 @@ const CourseDetailPage = () => {
         isClosable: true
       });
     }
-  } 
+  }
+
+  const sharedButtonStyle = {
+    width: "20vw",
+    height: "50px",
+    borderRadius: "md",
+    textAlign: "center",
+    lineHeight: "50px",
+    padding: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }
 
   return (
     <Box maxW="container.xl" mx="auto">
@@ -126,15 +138,23 @@ const CourseDetailPage = () => {
               <HStack spacing={4}>
               <Button
                 onClick={handleEdit}
-                colorScheme={"orange"}
-                width={"20vw"}
+                bg="gray.900"
+                color="blue.700"
+                _hover={{ bg: 'gray.800' }}
+                _active={{ bg: '#2d5382', color: 'gray.900' }}
+                border="1px solid #2d5382"
+                {...sharedButtonStyle}
               >
                 Edit
               </Button>
               <Button
                 onClick={() => handleDelete(course._id)}
-                colorScheme={"orange"}
-                width={"20vw"}
+                bg="gray.900"
+                color="red.700"
+                _hover={{ bg: 'gray.800' }}
+                _active={{ bg: '#9a2c2d', color: 'gray.900' }}
+                border="1px solid #9a2c2d"
+                {...sharedButtonStyle}
               >
                 Delete
               </Button>
@@ -142,16 +162,22 @@ const CourseDetailPage = () => {
             ) : ( !isEnrolled ? (
               <Button
                 onClick={() => handleEnroll(course._id)}
+                bg="gray.900"
+                color="green.500"
+                _hover={{ bg: 'gray.800' }}
+                _active={{ bg: '#37a169', color: 'gray.900' }}
+                border="1px solid #37a169"
+                {...sharedButtonStyle}
               >
                 Enroll
               </Button>
             ) : (
               <Box 
                 p={4} 
-                bg="green.500" 
-                color="white" 
-                borderRadius="md" 
-                textAlign="center"
+                bg="gray.900" 
+                color="orange.500"
+                border="1px solid #dd6b20"
+                {...sharedButtonStyle}
               >
                 Enrolled
               </Box>

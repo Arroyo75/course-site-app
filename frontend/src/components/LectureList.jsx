@@ -110,6 +110,7 @@ const LectureList = ({ course }) => {
               border="1px"
               borderColor="orange.300"
               transition="all 0.2s"
+              minW={{ base: "70vw", md: "30vw"}}
               _hover={{
                 transform: "translateY(-2px)",
                 boxShadow: "lg",
