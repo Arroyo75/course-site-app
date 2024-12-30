@@ -32,5 +32,26 @@ export const useCourseStore = create((set) => ({
     if(!data.success) return { success: false, message: data.message };
     set(state => ({ courses: state.courses.filter( course => course._id !== cid) }));
     return { success: true, message: data.message }
+  },
+  enrollInCourse: async (cid) => {
+    const res = await apiFetch(`/api/courses/${cid}/enroll`, {
+      method: "POST"
+    });
+    const data = await res.json();
+
+    if(data.success) {
+      set((state) => ({
+        courses: state.courses.map(course => 
+          course._id === cid 
+            ? { 
+                ...course, 
+                students: [...course.students, data.userId] 
+              }
+            : course
+        )
+      }));
+      return { success: true, message: data.message };
+     } else
+      return { success: false, message: data.message };
   }
 }));

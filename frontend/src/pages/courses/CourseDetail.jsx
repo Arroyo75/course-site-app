@@ -7,10 +7,11 @@ import LectureList from '../../components/LectureList.jsx';
 
 const CourseDetailPage = () => {
   const { id } = useParams();
-  const { courses, fetchCourses, deleteCourse } = useCourseStore();
+  const { courses, fetchCourses, deleteCourse, enrollInCourse } = useCourseStore();
   const { user } = useAuthStore();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isEnrolled, setIsEnrolled] = useState(false);
 
   const toast = useToast();
   const navigate = useNavigate();
@@ -25,13 +26,16 @@ const CourseDetailPage = () => {
 
       if (foundCourse) {
         setCourse(foundCourse);
+        if(user) {
+          setIsEnrolled(foundCourse.students?.includes(user.id));
+        }
       }
 
       setLoading(false);
     };
 
     fetchData();
-  }, [id, courses, fetchCourses]);
+  }, [id, courses, fetchCourses, user]);
 
   if (loading) {
     return (
@@ -79,6 +83,34 @@ const CourseDetailPage = () => {
 
   }
 
+  const handleEnroll = async (cid) => {
+    if(!user) {
+      navigate("/login");
+      return;
+    }
+
+    const { success, message } = await enrollInCourse(cid);
+
+    if(!success) {
+      toast({
+        title: 'Error',
+        description: message,
+        staus: 'error',
+        duration: 3000,
+        isCloseable: true
+      });
+    } else {
+      setIsEnrolled(true);
+      toast({
+        title: 'Success',
+        description: message,
+        status: 'success',
+        duration: 3000,
+        isClosable: true
+      });
+    }
+  } 
+
   return (
     <Box maxW="container.xl" mx="auto">
       <Flex align={"flex-start"} flexDir={{ base: 'column', md: 'row'}}>
@@ -107,11 +139,23 @@ const CourseDetailPage = () => {
                 Delete
               </Button>
             </HStack>
-            ) : (
-              <Button>
+            ) : ( !isEnrolled ? (
+              <Button
+                onClick={() => handleEnroll(course._id)}
+              >
                 Enroll
               </Button>
-            )}
+            ) : (
+              <Box 
+                p={4} 
+                bg="green.500" 
+                color="white" 
+                borderRadius="md" 
+                textAlign="center"
+              >
+                Enrolled
+              </Box>
+            ))}
           </VStack>
         </Box>
         <Box width={{base: "100%", md: "50%"}} py={12} px={6} bg="gray.900" color="white" rounded="lg" shadow="lg" display="flex" flexDirection="column" alignItems="center">

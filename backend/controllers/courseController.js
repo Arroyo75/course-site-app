@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Course from "../models/Course.js";
+import User from "../models/User.js";
 
 export const getCourses = async (req, res) => {
     try {
@@ -13,6 +14,7 @@ export const getCourses = async (req, res) => {
 
 export const createCourse = async (req, res) => {
     const { title, description, image } = req.body;
+    const userId = req.user._id;
 
     if(!title || !description || !image) {
         return res.status(400).json({ success: false, message: 'Please fill all fields'});
@@ -22,11 +24,16 @@ export const createCourse = async (req, res) => {
         title,
         description,
         image,
-        author: req.user._id
+        author: userId
     });
 
     try {
         await newCourse.save();
+
+        const user = await User.findById(userId);
+        user.createdCourses.push(newCourse._id);
+        await user.save();
+
         res.status(201).json({ success: true, data: newCourse});
     } catch(error) {
         console.error("Error creating course: ", error.message);
@@ -66,3 +73,36 @@ export const deleteCourse = async (req, res) => {
         res.status(500).json({ success: false, message: "Server error"});
     }
 };
+
+export const enrollInCourse = async (req, res) => {
+
+    const courseId = req.params.id;
+    const userId = req.user._id;
+
+    if(!mongoose.Types.ObjectId.isValid(courseId)) {
+        return res.status(404).json({ success: false, message: "Invalid Course Id" });
+    }
+
+    try {
+        const course = await Course.findById(courseId);
+        if(!course) {
+            return res.status(404).json({ success: false, message: "Course not found"});
+        }
+
+        if(course.students.includes(userId)) {
+            return res.status(500).json({ success: false, message: "Student already enrolled"});
+        }
+
+        course.students.push(userId);
+        await course.save();
+
+        const user = await User.findById(userId);
+        user.enrolledCourses.push(courseId);
+        await user.save();
+
+        res.status(200).json({ success: true, message: "Successfully enrolled in a course", userId: userId, course: course});
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
