@@ -8,6 +8,9 @@ export const useCourseStore = create((set) => ({
     created: [],
     enrolled: []
   },
+  searchResults: [],
+  searchQuery: '',
+  setSearchQuery: (query) => set({ searchQuery: query }),
   createCourse: async (newCourse) => {
     if(!newCourse.title || !newCourse.description || !newCourse.image) {
       return { success: false, message: "Please fill all fields"};
@@ -71,5 +74,22 @@ export const useCourseStore = create((set) => ({
       });
     }
     return data;
+  },
+  searchCourses: async (query) => {
+    try {
+      if (!query.trim()) {
+        set({ searchResults: [] });
+        return;
+      }
+      const res = await apiFetch(`/api/courses/search?q=${encodeURIComponent(query)}`);
+      const data = await res.json();
+
+      if(data.success) {
+        set({ searchResults: data.data });
+      }
+      return data;
+    } catch (error) {
+      return { success: false, message: error.message };
+    }
   }
 }));

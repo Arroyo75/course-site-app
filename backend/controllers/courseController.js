@@ -131,3 +131,64 @@ export const getUserCourses = async ( req, res ) => {
         res.status(500).json({ success: false, message: "Server error" });
     }
 }
+
+export const searchCourses = async (req, res) => {
+    try {
+        const { q } = req.query;
+
+        if(!q) {
+            return res.status(400).json({ success: false, message: "Search query is required" });
+        }
+
+        const searchPattern = new RegExp(q, 'i');
+
+        const courses = await Course.aggregate([
+            {
+                $lookup: {
+                    from: 'users',
+                    let: { authorId: '$author' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ['$_id', '$$authorId'] }
+                            }
+                        }
+                    ],
+                    as: 'authorDetails'
+                }
+            },
+            {
+                $unwind: '$authorDetails'
+            },
+            {
+                $match: {
+                    $or: [
+                        { title: searchPattern },
+                        { description: searchPattern },
+                        { 'authorDetails.name': searchPattern }
+                    ]
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    title: 1,
+                    description: 1,
+                    image: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                    author: {
+                        _id: '$authorDetails._id',
+                        name: '$authorDetails.name',
+                        email: '$authorDetails.email'
+                    }
+                }
+            }
+        ]);
+
+        res.status(200).json({ success: true, data: courses });
+    } catch (error) {
+        console.error("Seach error", error.message);
+        res.status(500).json({ success: false, message: "Server error" })
+    }
+}

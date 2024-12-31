@@ -1,18 +1,49 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom'
-import { Container, Flex, Button, HStack, Text, Input, InputRightElement, InputGroup, IconButton} from '@chakra-ui/react';
+import { Container, Flex, Button, HStack, Text, useToast, Input, InputRightElement, InputGroup, IconButton} from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore.jsx';
+import { useCourseStore } from '../store/courseStore.jsx';
 
 const Navbar = () => {
 
-    const navigate = useNavigate();
+    const [searchInput, setSearchInput] = useState('');
+    const { searchCourses, setSearchQuery } = useCourseStore();
     const { isAuthenticated, logout } = useAuthStore();
+    const navigate = useNavigate();
+    const toast = useToast();
 
     const handleLogout = () => {
         logout();
         navigate("/");
     }
+
+    const handleSearch = async (e) => {
+        e.preventDefault();
+
+        if(!searchInput.trim()) return;
+
+        try {
+            setSearchQuery(searchInput);
+            const result = await searchCourses(searchInput);
+
+            if(!result.success) {
+                toast({
+                    title: 'Search failed',
+                    description: result.message,
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: true
+                })
+            } else {
+                navigate('/search');
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <Container maxW={"1140px"} px={4}>
@@ -40,18 +71,21 @@ const Navbar = () => {
                     <Link to={"/"}>Coursite</Link>
                 </Text>
 
-                <form style={{ flexGrow: 1 }}>
+                <form onSubmit={handleSearch} style={{ flexGrow: 1 }}>
                 <InputGroup maxW="500px">
                     <Input
                     placeholder="Search courses..." 
                     bg="gray.800" 
                     color="gray.100"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
                     />
                     <InputRightElement>
                     <IconButton
                         aria-label="Search"
                         icon={<SearchIcon />}
                         variant="ghost"
+                        type="submit"
                     />
                     </InputRightElement>
                 </InputGroup>
