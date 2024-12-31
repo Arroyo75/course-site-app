@@ -6,7 +6,7 @@ import CourseCard from '../components/CourseCard.jsx';
 
 const HomePage = () => {
 
-    const { fetchCourses, courses } = useCourseStore();
+    const { courses, fetchCourses } = useCourseStore();
 
     useEffect(() => {
         fetchCourses();

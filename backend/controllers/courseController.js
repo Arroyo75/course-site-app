@@ -106,3 +106,28 @@ export const enrollInCourse = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 }
+
+export const getUserCourses = async ( req, res ) => {
+
+    try {
+        const user = await User.findById(req.user.id)
+            .populate({
+                path: 'createdCourses',
+                populate: {
+                    path: 'author',
+                    select: 'name email'
+                }
+            })
+            .populate({
+                path: 'enrolledCourses',
+                populate: {
+                    path: 'author',
+                    select: 'name email'
+                }
+            });
+        res.status(200).json({ success: true, data: {createdCourses: user.createdCourses, enrolledCourses: user.enrolledCourses}});
+    } catch (error) {
+        console.log("Error fetching user courses: ", error.message);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+}

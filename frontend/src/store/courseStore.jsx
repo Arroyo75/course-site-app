@@ -4,6 +4,10 @@ import { apiFetch } from './authStore.jsx'
 export const useCourseStore = create((set) => ({
   courses: [],
   setCourses: (courses) => set({ courses }),
+  userCourses: {
+    created: [],
+    enrolled: []
+  },
   createCourse: async (newCourse) => {
     if(!newCourse.title || !newCourse.description || !newCourse.image) {
       return { success: false, message: "Please fill all fields"};
@@ -53,5 +57,19 @@ export const useCourseStore = create((set) => ({
       return { success: true, message: data.message };
      } else
       return { success: false, message: data.message };
+  },
+  fetchUserCourses: async () => {
+    const res = await apiFetch("/api/courses/user");
+    const data = await res.json();
+
+    if(data.success) {
+      set({
+        userCourses: {
+          created: data.data.createdCourses,
+          enrolled: data.data.enrolledCourses
+        }
+      });
+    }
+    return data;
   }
 }));

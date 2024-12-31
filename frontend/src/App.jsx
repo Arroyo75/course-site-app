@@ -7,6 +7,7 @@ import Register from './pages/auth/Register.jsx';
 import Login from './pages/auth/Login.jsx';
 import CourseDetail from './pages/courses/CourseDetail.jsx';
 import CreateCourse from './pages/courses/CreateCourse.jsx';
+import MyCourses from './pages/courses/MyCourses.jsx';
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/course/:id" element={<CourseDetail />} />
+        <Route path="/mycourses" element={<MyCourses />} />
 
         <Route
           path="/course/create"

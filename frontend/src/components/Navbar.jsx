@@ -107,7 +107,8 @@ const Navbar = () => {
                                 Start Teaching
                             </Button>
                             <Button
-                            fontSize={{ base:"16", md:"16"}}
+                                onClick={() => navigate("/mycourses")}
+                                fontSize={{ base:"16", md:"16"}}
                                 fontWeight={"bold"}
                                 textAlign={"center"}
                                 bgGradient={"linear(to-r, orange.400, red.500)"}
