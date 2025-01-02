@@ -97,7 +97,7 @@ const Navbar = () => {
                             <Button
                             onClick={() => navigate("/register")}
                             variant={"link"}
-                            fontSize={{ base:"16", md:"16"}}
+                            fontSize={{ base:"16", sm:"18"}}
                             fontWeight={"bold"}
                             textAlign={"center"}
                             bg={"gray.900"}
@@ -112,7 +112,7 @@ const Navbar = () => {
                             <Button
                                 onClick={() => navigate("/login")}
                                 variant={"link"}
-                                fontSize={{ base:"16", md:"16"}}
+                                fontSize={{ base:"16", sm:"18"}}
                                 fontWeight={"bold"}
                                 textAlign={"center"}
                                 bg={"gray.900"}
@@ -129,7 +129,7 @@ const Navbar = () => {
                         <HStack spacing={4} alignItems={"center"}>
                             <Button
                                 onClick={() => navigate("/course/create")}
-                                fontSize={{ base:"16", md:"16"}}
+                                fontSize={{ base:"16", sm:"18"}}
                                 fontWeight={"bold"}
                                 textAlign={"center"}
                                 bgGradient={"linear(to-r, orange.400, red.500)"}
@@ -142,7 +142,7 @@ const Navbar = () => {
                             </Button>
                             <Button
                                 onClick={() => navigate("/mycourses")}
-                                fontSize={{ base:"16", md:"16"}}
+                                fontSize={{ base:"16", sm:"18"}}
                                 fontWeight={"bold"}
                                 textAlign={"center"}
                                 bgGradient={"linear(to-r, orange.400, red.500)"}
@@ -156,7 +156,7 @@ const Navbar = () => {
                             <Button
                                 onClick={handleLogout}
                                 variant={"link"}
-                                fontSize={{ base:"16", md:"16"}}
+                                fontSize={{ base:"16", sm:"18"}}
                                 fontWeight={"bold"}
                                 textAlign={"center"}
                                 bg={"gray.900"}

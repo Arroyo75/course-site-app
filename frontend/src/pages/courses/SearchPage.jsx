@@ -3,6 +3,7 @@ import { useCourseStore } from '../../store/courseStore.jsx';
 import CourseCard from '../../components/CourseCard.jsx';
 
 const SearchPage = () => {
+
   const { searchResults, searchQuery } = useCourseStore();
 
   return (
