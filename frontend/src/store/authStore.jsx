@@ -46,9 +46,12 @@ export const apiFetch = async (url, options = {}) => {
   const { token } = useAuthStore.getState();
   
   const defaultHeaders = {
-    'Content-Type': 'application/json',
     ...(token ? { 'Authorization': `Bearer ${token}` } : {})
   };
+
+  if(!(options.body instanceof FormData)) {
+    defaultHeaders['Content-Type'] = 'application/json';
+  }
 
   const mergedOptions = {
     ...options,

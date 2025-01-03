@@ -9,13 +9,14 @@ const LectureList = ({ course }) => {
 
   const [newLecture, setNewLecture] = useState({
     title: "",
-    filePath: ""
+    file: null
   })
 
-  const { fetchLectures, createLecture, deleteLecture, updateLecture, lectures } = useLectureStore();
+  const { fetchLectures, createLecture, deleteLecture, updateLecture, lectures, downloadLecture } = useLectureStore();
   const { user, isAuthenticated } = useAuthStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isUpdating, setIsUpdating] = useState(false); //Manage create/update modal
+  const [downloadingId, setDownloadingId] = useState(null);
   const toast = useToast();
 
   useEffect(() => {
@@ -46,7 +47,7 @@ const LectureList = ({ course }) => {
         isClosable: true
       })
     }
-    setNewLecture({title: "", filePath: ""});
+    setNewLecture({title: "", file: null});
   }
 
   const handleDeleteLecture = async (lid) => {
@@ -93,6 +94,20 @@ const LectureList = ({ course }) => {
     setNewLecture({title: "", filePath: ""});
   }
 
+  const handleDownload = async (lid) => {
+    setDownloadingId(lid);
+    try {
+      await downloadLecture(lid);
+    } finally {
+      setDownloadingId(null);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setNewLecture({ ...newLecture, file });
+  }
+
   return (
     <Box maxWidth={"75%"}>
       <VStack spacing={6} align="stretch">
@@ -122,6 +137,8 @@ const LectureList = ({ course }) => {
                 <HStack spacing={3}>
                   {isAuthenticated && (
                     <IconButton
+                      onClick={() => handleDownload(lecture._id)}
+                      disabled={downloadingId === lecture._id}
                       icon={<DownloadIcon />}
                       fontSize={20}
                       colorScheme="green"
@@ -199,10 +216,10 @@ const LectureList = ({ course }) => {
                         >
                         </Input>
                         <Input
-                            placeholder='File URL'
-                            name='filePath'
-                            value={newLecture.filePath}
-                            onChange={(e) => setNewLecture({ ...newLecture, filePath: e.target.value})}
+                            placeholder='File'
+                            name='file'
+                            type='file'
+                            onChange={handleFileChange}
                         >
                         </Input>
                     </VStack>
