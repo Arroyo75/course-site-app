@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import Lecture from '../models/Lecture.js';
-import { gfs } from '../config/gridfs.js';
 
 export const getLectures = async (req, res) => {
 
@@ -20,38 +19,22 @@ export const getLectures = async (req, res) => {
 };
 
 export const createLecture = async (req, res) => {
-  const { title, course } = req.body;
+  const { title, filePath, course } = req.body;
+
+  if(!title || !filePath || !course) {
+    return res.status(400).json({ success: false, message: "Please provide all fields" });
+  }
 
   try {
-
-    console.log(req.file);
-
-    if(!req.file) {
-      return res.status(400).json({
-        success: false,
-        message: "Please upload a file"
-      })
-    }
-
-    if(!title || !course) {
-      return res.status(400).json({ success: false, message: "Please provide all fields" });
-    }
     
     const newLecture = new Lecture({
-      title: title,
-      filePath: req.file.id,
-      course: course
+      title,
+      filePath,
+      course
     });
 
     await newLecture.save();
-
-    res.status(201).json({
-      success: true,
-      data: {
-        ...newLecture._doc,
-        originalName: req.file.metadata.originalName
-      }
-    });
+    res.status(201).json({ success: true, data: newLecture });
   } catch(error) {
     console.log("Error creating lecture: ", error.message);
     res.status(500).json({ success: false, message: "Server error"});
@@ -83,13 +66,6 @@ export const deleteLecture = async (req, res) => {
   }
 
   try {
-    const lecture = await Lecture.findById(id);
-    if(!lecture) {
-      return req.status(404).json({ success: false, message: "Lecture not found"});
-    }
-
-    await gfs.delete(new mongoose.Types.ObjectId(lecture.filePath));
-
     await Lecture.findByIdAndDelete(id);
     res.status(200).json({ success: true, message: "Deleted" });
   } catch (error) {
@@ -97,32 +73,3 @@ export const deleteLecture = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error"});
   }
 }
-
-export const downloadLecture = async (req, res) => {
-  try {
-    const lecture = await Lecture.findById(req.params.id);
-    if(!lecture) {
-      return res.status(404).json({
-        success: false,
-        message: "Lecture not found"
-      });
-    }
-
-    const file = await gfs.find({ _id: new mongoose.Types.ObjectId(lecture.filePath) }).toArray();
-    if(!file || file.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "File not found"
-      });
-    }
-
-    res.header('Content-Type', 'application/pdf');
-    res.header('Content-Disposition', `attachment; filename="${file[0].metadata.originalName}"`);
-
-    const downloadStream = gfs.openDownloadStream(new mongoose.Types.ObjectId(lecture.filePath));
-    downloadStream.pipe(res);
-  } catch (error) {
-    console.log("Error downloading file: ", error.message);
-    res.status(500).json({ success: false, message: "Server error"});
-  }
-};
