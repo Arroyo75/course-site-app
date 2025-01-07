@@ -36,4 +36,16 @@ const upload = multer({
   }
 });
 
+export const deleteFileFromS3 = async (fileKey) => {
+  try {
+      await s3Client.send(new DeleteObjectCommand({
+          Bucket: process.env.AWS_BUCKET_NAME,
+          Key: fileKey
+      }));
+  } catch (error) {
+      console.error('Error deleting file from S3:', error);
+      throw error;
+  }
+};
+
 export const uploadLecture = upload.single('lecture');
