@@ -3,6 +3,8 @@ Technologies:
 Backend - Node.js Express MongoDb Multer ( for file uploads )
 Frontend - React.js Vite ChakraUI
 
+Project will include file uploading and downloading, with aws s3 storage. ( not yet implemented )
+
 How to run:
 Right now site isn't hosted anywhere if you want to check out the project clone repo, then:
 npm run build (to install dependencies)
