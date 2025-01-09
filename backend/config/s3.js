@@ -47,5 +47,3 @@ export const deleteFileFromS3 = async (fileKey) => {
       throw error;
   }
 };
-
-export const uploadLecture = upload.single('lecture');
