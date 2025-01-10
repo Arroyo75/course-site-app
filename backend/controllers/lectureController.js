@@ -51,16 +51,47 @@ export const createLecture = async (req, res) => {
 
 export const updateLecture = async (req, res) => {
   const { id } = req.params;
-  const lecture = req.body;
 
   if(!mongoose.Types.ObjectId.isValid(id)) {
+    if(req.file) {
+      await deleteFileFromS3(req.file.key);
+    }
+
     return res.status(404).json({ success: false, message: "Invalid Lecture Id" });
   }
 
   try {
-    const updatedLecture = await Lecture.findByIdAndUpdate(id, lecture, {new: true});
+
+    const lecture = await Lecture.findById(id);
+
+    if(!lecture) {
+      if(req.file) {
+        await deleteFileFromS3(req.file.key);
+      }
+      return res.status(404).json({ success: false, message: "Lecture not found" })
+    }
+
+    if(req.file) {
+      const oldFileKey = lecture.filePath.split('.com/')[1];
+      try {
+        await deleteFileFromS3(oldFileKey);
+      } catch (error) {
+        console.log("Error detecting old file: ", error);
+      }
+
+      lecture.filePath = req.file.location;
+    }
+
+    if(req.body.title) {
+      lecture.title = req.body.title;
+    }
+
+    const updatedLecture = await lecture.save();
     res.status(200).json({ success: true, data: updatedLecture});
   } catch (error) {
+    if(req.file) {
+      await deleteFileFromS3(req.file.key);
+    }
     console.log("Error updating lecture: ", error.message);
     res.status(500).json({ success: false, message: "Server Error" });
   }
