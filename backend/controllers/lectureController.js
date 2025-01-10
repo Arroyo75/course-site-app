@@ -74,10 +74,24 @@ export const deleteLecture = async (req, res) => {
   }
 
   try {
+    const lecture = await Lecture.findById(id);
+    if(!lecture) {
+      return res.status(404).json({ success: false, message: "Lecture not found"});
+    }
+
+    const fileKey = lecture.filePath.split('.com/')[1];
+
+    try {
+      await deleteFileFromS3(fileKey);
+    } catch (error) {
+      console.log("Error deleting file from s3: ", error);
+    }
+
     await Lecture.findByIdAndDelete(id);
-    res.status(200).json({ success: true, message: "Deleted" });
+
+    res.status(200).json({ success: true, message: "Lecture deleted successfully"})
   } catch (error) {
-    console.log("Error deleting lecture", error.message);
+    console.log("Error deleting lecture", error);
     res.status(500).json({ success: false, message: "Server error"});
   }
-}
+};
