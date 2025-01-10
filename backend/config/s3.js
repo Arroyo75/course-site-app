@@ -1,4 +1,5 @@
-import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
 import dotenv from 'dotenv';
@@ -52,3 +53,17 @@ export const deleteFileFromS3 = async (fileKey) => {
         throw error;
     }
 };
+
+export const getFileFromS3 = async (fileKey) => {
+    try {
+        const command = new GetObjectCommand({
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: fileKey
+        });
+        const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+        return signedUrl;
+    } catch (error) {
+        console.error("Error generating signed url: ", error);
+        throw error;
+    }
+}

@@ -12,7 +12,7 @@ const LectureList = ({ course }) => {
     file: null
   })
 
-  const { fetchLectures, createLecture, deleteLecture, updateLecture, lectures } = useLectureStore();
+  const { fetchLectures, createLecture, deleteLecture, updateLecture, downloadLecture, lectures } = useLectureStore();
   const { user, isAuthenticated } = useAuthStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isUpdating, setIsUpdating] = useState(false); //Manage create/update modal
@@ -104,6 +104,19 @@ const LectureList = ({ course }) => {
     setNewLecture({title: "", file: null});
   }
 
+  const handleDownloadLecture = async (lid) => {
+    const { success, message } = await downloadLecture(lid);
+    if(!success) {
+      toast({
+        title: 'Error',
+        description: message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      })
+    }
+  }
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if(file && file.type !== 'application/pdf') {
@@ -149,6 +162,7 @@ const LectureList = ({ course }) => {
                   {isAuthenticated && (
                     <IconButton
                       icon={<DownloadIcon />}
+                      onClick={() => handleDownloadLecture(lecture._id)}
                       fontSize={20}
                       colorScheme="green"
                       variant="ghost"

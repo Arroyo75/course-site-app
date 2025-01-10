@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import Lecture from '../models/Lecture.js';
-import { deleteFileFromS3 } from '../config/s3.js';
+import { deleteFileFromS3, getFileFromS3 } from '../config/s3.js';
 
 export const getLectures = async (req, res) => {
 
@@ -124,5 +124,34 @@ export const deleteLecture = async (req, res) => {
   } catch (error) {
     console.log("Error deleting lecture", error);
     res.status(500).json({ success: false, message: "Server error"});
+  }
+};
+
+export const downloadLecture = async (req, res) => {
+  const { id } = req.params;
+  if(!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ success: false, message: "Invalid lecture id"});
+  }
+
+  try {
+    const lecture = await Lecture.findById(id);
+
+    if(!lecture) {
+      return res.status(404).json({ success: false, message: "Lecture not found"});
+    }
+    
+    const fileKey = lecture.filePath.split('.com/')[1];
+    const signedUrl = await getFileFromS3(fileKey);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        url: signedUrl,
+        filename: lecture.title + '.pdf'
+      }
+    });
+  } catch (error) {
+    console.log("Error generating download URL: ", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };

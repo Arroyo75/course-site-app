@@ -55,5 +55,22 @@ export const useLectureStore = create((set) => ({
 
     set(state => ({ lectures: state.lectures.map((lecture) => (lecture._id === lid ? data.data : lecture))}))
     return { success: true, message: data.message }
+  },
+  downloadLecture: async (lid) => {
+    const res = await apiFetch(`/api/lectures/download/${lid}`);
+    const data = await res.json();
+
+    if(data.success) {
+      const link = document.createElement('a');
+      link.href = data.data.url;
+      link.setAttribute('download', data.data.filename);  
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      return { success: true, message: "Download Started"};
+    } else {
+      return { success: false, message: data.message }
+    }
   }
 }));
