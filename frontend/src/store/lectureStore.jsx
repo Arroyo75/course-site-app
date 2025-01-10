@@ -4,22 +4,20 @@ import { apiFetch } from './authStore.jsx';
 export const useLectureStore = create((set) => ({
   lectures: [],
   setLectures: (lectures) => set({ lectures }),
-  createLecture: async (newLecture, cid) => {
-    if(!newLecture.title) {
+  createLecture: async (newLecture) => {
+    if(!newLecture.get('title') || !newLecture.get('lecture')) {
       return { success: false, message: "Please fill all fields"};
     }
     const res = await apiFetch("/api/lectures", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        title: newLecture.title,
-        filePath: newLecture.filePath,
-        course: cid
-      })
+      body: newLecture
     });
     const data = await res.json();
+
+    if(!data.success) {
+      return ({ successs: false, message: data.message })
+    }
+
     set((state) => ({ lectures: [ ...state.lectures, data.data]}));
     return ({ success: true, data: newLecture });
   },
@@ -41,16 +39,13 @@ export const useLectureStore = create((set) => ({
     return { success: true, message: data.message}
   },
   updateLecture: async (updatedLecture, lid) => {
-    if(!updatedLecture.title) {
-      return { success: false, message: "Please fill all fields"};
+    if(!updatedLecture.has('title') && !updatedLecture.has('lecture')) {
+      return { success: false, message: "Please make your change"};
     }
 
     const res = await apiFetch(`/api/lectures/${lid}`, {
       method: "PUT",
-      headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(updatedLecture)
+      body: updatedLecture
     });
     
     const data = await res.json();

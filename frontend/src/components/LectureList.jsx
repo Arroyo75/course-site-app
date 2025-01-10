@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useDisclosure, useToast, Box, Text, Heading, VStack, Button, HStack, IconButton, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, Input, ModalFooter } from '@chakra-ui/react';
+import { useDisclosure, useToast, Box, Text, Heading, VStack, Button, HStack, IconButton, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, FormControl, FormLabel, Input, ModalFooter } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon, DownloadIcon } from '@chakra-ui/icons';
 import { useLectureStore } from '../store/lectureStore.jsx';
 import { useAuthStore } from '../store/authStore.jsx';
@@ -9,7 +9,7 @@ const LectureList = ({ course }) => {
 
   const [newLecture, setNewLecture] = useState({
     title: "",
-    filePath: ""
+    file: null
   })
 
   const { fetchLectures, createLecture, deleteLecture, updateLecture, lectures } = useLectureStore();
@@ -26,8 +26,13 @@ const LectureList = ({ course }) => {
 
   const isAuthor = course?.author?._id === user?.id
 
-  const handleCreateLecture = async (cid, newLecture) => {
-    const { success, message } = await createLecture(newLecture, cid);
+  const handleCreateLecture = async (cid, lectureData) => {
+    const formData = new FormData();
+    formData.append('title', lectureData.title);
+    formData.append('lecture', lectureData.file);
+    formData.append('course', cid);
+
+    const { success, message } = await createLecture(formData);
     onClose();
     if(!success) {
       toast({
@@ -46,7 +51,7 @@ const LectureList = ({ course }) => {
         isClosable: true
       })
     }
-    setNewLecture({title: "", filePath: ""});
+    setNewLecture({title: "", file: null});
   }
 
   const handleDeleteLecture = async (lid) => {
@@ -70,8 +75,14 @@ const LectureList = ({ course }) => {
     }
   }
 
-  const handleUpdateLecture = async (lid, newLecture) => {
-    const { success, message } = await updateLecture(newLecture, lid);
+  const handleUpdateLecture = async (lid, lectureData) => {
+    const formData = new FormData();
+    formData.append('title', lectureData.title);
+    if(lectureData.file) {
+      formData.append('lecture', lectureData.file);
+    }
+
+    const { success, message } = await updateLecture(formData, lid);
     onClose();
     if(!success) {
       toast({
@@ -90,8 +101,23 @@ const LectureList = ({ course }) => {
         isClosable: true
       })
     }
-    setNewLecture({title: "", filePath: ""});
+    setNewLecture({title: "", file: null});
   }
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if(file && file.type !== 'application/pdf') {
+      toast({
+        title: 'Error',
+        description: 'Please upload a PDF file',
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      })
+      return;
+    }
+    setNewLecture(prev=> ({ ...prev, file: file }));
+  };
 
   return (
     <Box maxWidth={"75%"}>
@@ -190,22 +216,28 @@ const LectureList = ({ course }) => {
                 <ModalHeader>{isUpdating ? "Update Lecture" : "Create Lecture"}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <VStack spacing={4}>
-                        <Input
-                            placeholder='Lecture title'
-                            name='title'
-                            value={newLecture.title}
-                            onChange={(e) => setNewLecture({ ...newLecture, title: e.target.value})}
-                        >
-                        </Input>
-                        <Input
-                            placeholder='File URL'
-                            name='filePath'
-                            value={newLecture.filePath}
-                            onChange={(e) => setNewLecture({ ...newLecture, filePath: e.target.value})}
-                        >
-                        </Input>
-                    </VStack>
+                  <VStack spacing={4}>
+                    <FormControl isRequired>
+                      <FormLabel>Title</FormLabel>
+                      <Input
+                        placeholder='Lecture title'
+                        name='title'
+                        value={newLecture.title}
+                        onChange={(e) => setNewLecture({ ...newLecture, title: e.target.value})}
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel>{isUpdating ? "Update PDF (optional)" : "Upload PDF"}</FormLabel>
+                      <Input
+                        type="file"
+                        accept=".pdf"
+                        onChange={handleFileChange}
+                        p={1}
+                        border="none"
+                        _focus={{ outline: "none" }}
+                      />
+                    </FormControl>
+                  </VStack>
                 </ModalBody>
                 <ModalFooter>
                   {isUpdating ? (
@@ -231,7 +263,6 @@ LectureList.propTypes = {
   course: PropTypes.shape({
     _id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    filePath: PropTypes.string,
     author: PropTypes.shape({
       _id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
