@@ -1,5 +1,5 @@
 import multer from 'multer';
-import { s3Storage } from '../config/s3Config.js';
+import { s3Storage } from '../config/s3.js';
 
 const fileFilter = (req, file, cb) => {
     if (file.mimetype === 'application/pdf') {

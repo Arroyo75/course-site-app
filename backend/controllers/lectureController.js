@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import Lecture from '../models/Lecture.js';
+import { deleteFileFromS3 } from '../config/s3.js';
 
 export const getLectures = async (req, res) => {
 
@@ -19,25 +20,32 @@ export const getLectures = async (req, res) => {
 };
 
 export const createLecture = async (req, res) => {
-  const { title, filePath, course } = req.body;
-
-  if(!title || !filePath || !course) {
-    return res.status(400).json({ success: false, message: "Please provide all fields" });
-  }
-
   try {
-    
+    if(!req.file) {
+      return res.status(400).json({ success: false, message: "Please upload a PDF file."});
+    }
+
+    const { title, course } = req.body;
+
+    if(!title || !course) {
+      await deleteFileFromS3(req.file.key);
+      res.status(400).json({ success: false, message: "Please provide title and course."});
+    }
+
     const newLecture = new Lecture({
       title,
-      filePath,
+      filePath: req.file.location,
       course
     });
 
     await newLecture.save();
-    res.status(201).json({ success: true, data: newLecture });
-  } catch(error) {
-    console.log("Error creating lecture: ", error.message);
-    res.status(500).json({ success: false, message: "Server error"});
+    res.status(201).json({ success: true, data: { ...newLecture._doc, fileUrl: req.file.location }});
+  } catch (error) {
+    if(req.file) {
+      await deleteFileFromS3(req.file.key);
+    }
+    console.log("Error creating lecture");
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
