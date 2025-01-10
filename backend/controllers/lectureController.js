@@ -118,7 +118,7 @@ export const deleteLecture = async (req, res) => {
       console.log("Error deleting file from s3: ", error);
     }
 
-    await Lecture.findByIdAndDelete(id);
+    await lecture.deleteOne();
 
     res.status(200).json({ success: true, message: "Lecture deleted successfully"})
   } catch (error) {

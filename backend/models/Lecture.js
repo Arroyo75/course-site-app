@@ -18,15 +18,15 @@ const lectureSchema = new mongoose.Schema({
     timestamps: true
 });
 
-lectureSchema.pre('remove', async function(next) {
+lectureSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
     try {
-        await Progress.updateMany(
-            { 'completedLectures.lecture': this._id },
-            { $pull: { completedLectures: { lecture: this._id } } }
-        );
-        next();
-    } catch(error) {
-        next(error);
+      await mongoose.model('Progress').updateMany(
+        { 'completedLectures.lecture': this._id },
+        { $pull: { completedLectures: { lecture: this._id } } }
+      );
+      next();
+    } catch (error) {
+      next(error);
     }
 });
 

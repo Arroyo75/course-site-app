@@ -25,6 +25,18 @@ const courseSchema = new mongoose.Schema({
     timestamps: true
 });
 
+courseSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
+    try {
+        await mongoose.model('Progress').deleteMany({ course: this._id });
+        
+        await mongoose.model('Lecture').deleteMany({ course: this._id });
+        
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
+
 const Course = mongoose.model('Course', courseSchema);
 
 export default Course;

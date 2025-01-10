@@ -61,12 +61,14 @@ export const deleteCourse = async (req, res) => {
 
     const {id} = req.params;
 
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({ succes: false, message: "Server error"});
-    }
-
     try {
-        await Course.findByIdAndDelete(id);
+        const course = await Course.findById(id);
+        if(!course) {
+            return res.status(404).json({ success: false, message: "Course not found"});
+        }
+
+        await course.deleteOne();
+
         res.status(200).json({ success: true, message: "Course Deleted Successfully"});
     } catch (error) {
         console.log("Error deleting course: ", error.message);
