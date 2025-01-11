@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDisclosure, useToast, Box, Text, Heading, VStack, Button, HStack, IconButton, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, FormControl, FormLabel, Input, ModalFooter } from '@chakra-ui/react';
-import { EditIcon, DeleteIcon, DownloadIcon } from '@chakra-ui/icons';
+import { EditIcon, DeleteIcon, DownloadIcon, CheckCircleIcon } from '@chakra-ui/icons';
 import { useLectureStore } from '../store/lectureStore.jsx';
 import { useAuthStore } from '../store/authStore.jsx';
 
@@ -12,7 +12,7 @@ const LectureList = ({ course }) => {
     file: null
   })
 
-  const { fetchLectures, createLecture, deleteLecture, updateLecture, downloadLecture, lectures } = useLectureStore();
+  const { lectures, fetchLectures, createLecture, deleteLecture, updateLecture, downloadLecture, isLectureCompleted } = useLectureStore();
   const { user, isAuthenticated } = useAuthStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isUpdating, setIsUpdating] = useState(false); //Manage create/update modal
@@ -105,7 +105,7 @@ const LectureList = ({ course }) => {
   }
 
   const handleDownloadLecture = async (lid) => {
-    const { success, message } = await downloadLecture(lid);
+    const { success, message } = await downloadLecture(course._id, lid);
     if(!success) {
       toast({
         title: 'Error',
@@ -115,7 +115,7 @@ const LectureList = ({ course }) => {
         isClosable: true
       })
     }
-  }
+  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -160,15 +160,20 @@ const LectureList = ({ course }) => {
                 <Text fontSize="lg" fontWeight="medium" color="orange.300">{lecture.title}</Text>
                 <HStack spacing={3}>
                   {isAuthenticated && (
-                    <IconButton
-                      icon={<DownloadIcon />}
-                      onClick={() => handleDownloadLecture(lecture._id)}
-                      fontSize={20}
-                      colorScheme="green"
-                      variant="ghost"
-                      size="sm"
-                      _hover={{ bg: 'gray.700' }}
-                    />
+                    <HStack spacing={3}>
+                      <IconButton
+                        icon={<DownloadIcon />}
+                        onClick={() => handleDownloadLecture(lecture._id)}
+                        fontSize={20}
+                        colorScheme="green"
+                        variant="ghost"
+                        size="sm"
+                        _hover={{ bg: 'gray.700' }}
+                      />
+                      {isLectureCompleted(lecture._id) && (
+                        <CheckCircleIcon boxSize={6} color="orange.400" />
+                      )}
+                    </HStack>
                   )}
                   {isAuthor && (
                     <HStack spacing={3}>

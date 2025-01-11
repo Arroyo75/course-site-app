@@ -132,7 +132,7 @@ export const downloadLecture = async (req, res) => {
   if(!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ success: false, message: "Invalid lecture id"});
   }
-
+  
   try {
     const lecture = await Lecture.findById(id);
 
