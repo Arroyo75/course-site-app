@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useDisclosure, useToast, Box, Text, Heading, VStack, Button, HStack, IconButton, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, FormControl, FormLabel, Input, ModalFooter } from '@chakra-ui/react';
+import { useDisclosure, useToast, Box, Text, Heading, VStack, Button, HStack, IconButton, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, FormControl, FormLabel, Input, ModalFooter, Progress } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon, DownloadIcon, CheckCircleIcon } from '@chakra-ui/icons';
 import { useLectureStore } from '../store/lectureStore.jsx';
 import { useAuthStore } from '../store/authStore.jsx';
@@ -25,6 +25,9 @@ const LectureList = ({ course }) => {
   }, [course, fetchLectures]);
 
   const isAuthor = course?.author?._id === user?.id
+
+  const getCompletionPercentage = useLectureStore(state => state.getCompletionPercantage);
+  const completionPercentage = getCompletionPercentage();
 
   const handleCreateLecture = async (cid, lectureData) => {
     const formData = new FormData();
@@ -210,6 +213,36 @@ const LectureList = ({ course }) => {
               No lectures found
             </Text>
           )}
+          <HStack spacing={4} minW={{ base: "70vw", md: "30vw"}} alignItems="center">
+            <Progress 
+                value={completionPercentage} 
+                colorScheme="green" 
+                size="lg"
+                mb={4}
+                flex="1"
+                mt="15px"
+                sx={{
+                    '& > div': {
+                        background: 'linear-gradient(45deg, #e88437 25%, #e53e3c 25%, #e53e3c 50%, #e88437 50%, #e88437 75%, #e53e3c 75%,  #e53e3c)',
+                        backgroundSize: '1rem 1rem',
+                        animation: 'move 1s linear infinite',
+                    },
+                }}
+            />
+            <Text fontWeight="bold">{completionPercentage}%</Text>
+            <style>
+                {`
+                    @keyframes move {
+                        0% {
+                            background-position: 0 0;
+                        }
+                        100% {
+                            background-position: 1rem 0; /* Adjust the speed of the animation */
+                        }
+                    }
+                `}
+            </style>
+          </HStack>
           {isAuthor && (
           <Button
             onClick={() => {
