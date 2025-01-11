@@ -223,7 +223,7 @@ const LectureList = ({ course }) => {
                 mt="15px"
                 sx={{
                     '& > div': {
-                        background: 'linear-gradient(45deg, #e88437 25%, #e53e3c 25%, #e53e3c 50%, #e88437 50%, #e88437 75%, #e53e3c 75%,  #e53e3c)',
+                        background: 'linear-gradient(45deg, #1986b1 25%, #2d5382 25%, #2d5382 50%, #1986b1 50%, #1986b1 75%, #2d5382 75%,  #2d5382)',
                         backgroundSize: '1rem 1rem',
                         animation: 'move 1s linear infinite',
                     },
