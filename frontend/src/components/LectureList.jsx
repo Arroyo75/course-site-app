@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useDisclosure, useToast, Box, Text, Heading, VStack, Button, HStack, IconButton, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, FormControl, FormLabel, Input, ModalFooter, Progress } from '@chakra-ui/react';
+import { useDisclosure, Flex, useToast, Box, Text, Heading, VStack, Button, HStack, IconButton, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, ModalCloseButton, FormControl, FormLabel, Input, ModalFooter, Progress } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon, DownloadIcon, CheckCircleIcon } from '@chakra-ui/icons';
 import { useLectureStore } from '../store/lectureStore.jsx';
 import { useAuthStore } from '../store/authStore.jsx';
@@ -213,7 +213,7 @@ const LectureList = ({ course }) => {
               No lectures found
             </Text>
           )}
-          <HStack spacing={4} minW={{ base: "70vw", md: "30vw"}} alignItems="center">
+          <Flex spacing={4} minW={{ base: "70vw", md: "30vw"}} alignItems="center">
             <Progress 
                 value={completionPercentage} 
                 colorScheme="green" 
@@ -242,7 +242,7 @@ const LectureList = ({ course }) => {
                     }
                 `}
             </style>
-          </HStack>
+          </Flex>
           {isAuthor && (
           <Button
             onClick={() => {
