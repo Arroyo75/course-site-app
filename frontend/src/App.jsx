@@ -21,7 +21,6 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/course/:id" element={<CourseDetail />} />
-        <Route path="/mycourses" element={<MyCourses />} />
         <Route path="/search" element={<SearchPage />} />
 
         <Route
@@ -29,6 +28,15 @@ function App() {
           element={
             <ProtectedRoute>
               <CreateCourse />
+            </ProtectedRoute>
+          }
+        >
+        </Route>
+        <Route
+          path="/mycourses"
+          element={
+            <ProtectedRoute>
+              <MyCourses />
             </ProtectedRoute>
           }
         >

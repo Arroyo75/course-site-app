@@ -20,9 +20,9 @@ const LectureList = ({ course }) => {
 
   useEffect(() => {
     if(course?._id) {
-      fetchLectures(course._id);
+      fetchLectures(course._id, isAuthenticated);
     }
-  }, [course, fetchLectures]);
+  }, [course, fetchLectures, isAuthenticated]);
 
   const isAuthor = course?.author?._id === user?.id
 
@@ -213,36 +213,38 @@ const LectureList = ({ course }) => {
               No lectures found
             </Text>
           )}
-          <Flex spacing={4} minW={{ base: "70vw", md: "30vw"}} alignItems="center">
-            <Progress 
-                value={completionPercentage} 
-                colorScheme="green" 
-                size="lg"
-                mb={4}
-                flex="1"
-                mt="15px"
-                sx={{
-                    '& > div': {
-                        background: 'linear-gradient(45deg, #1986b1 25%, #2d5382 25%, #2d5382 50%, #1986b1 50%, #1986b1 75%, #2d5382 75%,  #2d5382)',
-                        backgroundSize: '1rem 1rem',
-                        animation: 'move 1s linear infinite',
-                    },
-                }}
-            />
-            <Text fontWeight="bold">{completionPercentage}%</Text>
-            <style>
-                {`
-                    @keyframes move {
-                        0% {
-                            background-position: 0 0;
-                        }
-                        100% {
-                            background-position: 1rem 0; /* Adjust the speed of the animation */
-                        }
-                    }
-                `}
-            </style>
-          </Flex>
+          {isAuthenticated && (
+            <Flex spacing={4} minW={{ base: "70vw", md: "30vw"}} alignItems="center">
+              <Progress 
+                  value={completionPercentage} 
+                  colorScheme="green" 
+                  size="lg"
+                  mb={4}
+                  flex="1"
+                  mt="15px"
+                  sx={{
+                      '& > div': {
+                          background: 'linear-gradient(45deg, #1986b1 25%, #2d5382 25%, #2d5382 50%, #1986b1 50%, #1986b1 75%, #2d5382 75%,  #2d5382)',
+                          backgroundSize: '1rem 1rem',
+                          animation: 'move 1s linear infinite',
+                      },
+                  }}
+              />
+              <Text fontWeight="bold">{completionPercentage}%</Text>
+              <style>
+                  {`
+                      @keyframes move {
+                          0% {
+                              background-position: 0 0;
+                          }
+                          100% {
+                              background-position: 1rem 0; /* Adjust the speed of the animation */
+                          }
+                      }
+                  `}
+              </style>
+            </Flex>
+          )}
           {isAuthor && (
           <Button
             onClick={() => {

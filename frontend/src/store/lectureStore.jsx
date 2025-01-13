@@ -22,17 +22,19 @@ export const useLectureStore = create((set, get) => ({
     set((state) => ({ lectures: [ ...state.lectures, data.data]}));
     return ({ success: true, data: newLecture });
   },
-  fetchLectures: async (cid) => {
+  fetchLectures: async (cid, isAuthenticated) => {
     const res = await apiFetch(`/api/lectures/${cid}`);
     const data = await res.json();
     set({lectures: data.data});
 
-    const progressRes = await apiFetch(`/api/progress/courses/${cid}`);
-    const progressData = await progressRes.json();
-      
-    if (progressData.success) {
-      const completedIds = progressData.data.map(item => item.lecture);
-      set({ completedLectures: completedIds });
+    if(isAuthenticated) {
+      const progressRes = await apiFetch(`/api/progress/courses/${cid}`);
+      const progressData = await progressRes.json();
+        
+      if (progressData.success) {
+        const completedIds = progressData.data.map(item => item.lecture);
+        set({ completedLectures: completedIds });
+      }
     }
   },
   deleteLecture: async (lid) => {
