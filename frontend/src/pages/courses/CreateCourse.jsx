@@ -37,7 +37,7 @@ const CreateCourse = () => {
     };
 
     return (
-        <Container maxW={"container.sm"}>
+        <Container maxW={"container.sm"} mt={{ base: 20, sm: 20, md: 0}}>
             <VStack
                 spacing={8}
             >

@@ -124,7 +124,7 @@ const CourseDetailPage = () => {
   }
 
   return (
-    <Box maxW="container.xl" mx="auto">
+    <Box maxW="container.xl" mx="auto" mt={{ base: 6, sm: 7, md: 0}}>
       <Flex align={"flex-start"} flexDir={{ base: 'column', md: 'row'}}>
         <Box width={{base: "100%", md: "50%"}} py={12} px={6} bg="gray.900" color="white" rounded="lg" shadow="lg">
           <VStack spacing={6}>

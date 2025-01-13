@@ -13,44 +13,44 @@ const HomePage = () => {
     }, [fetchCourses]);
 
     return (
-        <Container maxW='container.xl' py={12}>
-			<VStack spacing={8}>
-				<Text
-					fontSize={"30"}
-					fontWeight={"bold"}
-					bgGradient={"linear(to-r, orange.400, red.500)"}
-					bgClip={"text"}
-					textAlign={"center"}
-				>
-					Start learning
-				</Text>
-
-				<SimpleGrid
-					columns={{
-						base: 1,
-						md: 2,
-						lg: 3,
-					}}
-					spacing={10}
-					w={"full"}
-				>
-					{courses.map((course) => (
-						<CourseCard key={course._id} course={course} />
-					))}
-				</SimpleGrid>
-
-				{courses.length === 0 && (
-					<Text fontSize='xl' textAlign={"center"} fontWeight='bold' color='gray.500'>
-						No courses found {" "}
-						<Link to={"/create"}>
-							<Text as='span' color='orange.400' _hover={{ textDecoration: "underline" }}>
-								Create a course
-							</Text>
-						</Link>
+			<Container maxW='container.xl' py={12} mt={{ base: 6, sm: 5, md: 0}}>
+				<VStack spacing={8}>
+					<Text
+						fontSize={"30"}
+						fontWeight={"bold"}
+						bgGradient={"linear(to-r, orange.400, red.500)"}
+						bgClip={"text"}
+						textAlign={"center"}
+					>
+						Start learning
 					</Text>
-				)}
-			</VStack>
-		</Container>
+
+					<SimpleGrid
+						columns={{
+							base: 1,
+							sm: 2,
+							lg: 3,
+						}}
+						spacing={10}
+						w={"full"}
+					>
+						{courses.map((course) => (
+							<CourseCard key={course._id} course={course} />
+						))}
+					</SimpleGrid>
+
+					{courses.length === 0 && (
+						<Text fontSize='xl' textAlign={"center"} fontWeight='bold' color='gray.500'>
+							No courses found {" "}
+							<Link to={"/create"}>
+								<Text as='span' color='orange.400' _hover={{ textDecoration: "underline" }}>
+									Create a course
+								</Text>
+							</Link>
+						</Text>
+					)}
+				</VStack>
+			</Container>
     )
 }
 

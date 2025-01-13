@@ -251,6 +251,7 @@ const LectureList = ({ course, isEnrolled }) => {
               setIsUpdating(false);
               onOpen();
             }}
+            minW={{ base: "70vw", md: "30vw"}}
             size="lg"
             bg="orange.500"
             color="white"

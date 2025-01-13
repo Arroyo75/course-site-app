@@ -69,7 +69,7 @@ const Login = () => {
   };
 
   return (
-    <Box maxW="400px" mx="auto" mt="8" p="4" borderWidth="1px" borderRadius="lg">
+    <Box maxW="400px" mx="auto" mt={{ base: 12, sm: 14, md: 8}} p="4" borderWidth="1px" borderRadius="lg">
       <Heading mb="6" textAlign="center">
         Login
       </Heading>

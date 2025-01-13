@@ -56,12 +56,12 @@ const Navbar = () => {
                     md:"row"
                 }}
                 gap={{
-                    md: 24,
-                    base: 2
+                    md: 12,
+                    base: 1
                 }}
             >
                 <Text
-                    fontSize={{ base:"25", md:"32"}}
+                    fontSize={{ base:"25", md:"30"}}
                     fontWeight={"bold"}
                     textTransform={"uppercase"}
                     textAlign={"center"}
@@ -72,13 +72,14 @@ const Navbar = () => {
                 </Text>
 
                 <form onSubmit={handleSearch} style={{ flexGrow: 1 }}>
-                <InputGroup maxW="500px">
+                <InputGroup maxW={"500px"} >
                     <Input
                     placeholder="Search courses..." 
                     bg="gray.800" 
                     color="gray.100"
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
+                    height={{ base:"2rem", sm: "2.15rem", md:"2.5rem" }}
                     />
                     <InputRightElement>
                     <IconButton
@@ -86,6 +87,8 @@ const Navbar = () => {
                         icon={<SearchIcon />}
                         variant="ghost"
                         type="submit"
+                        height={{ base:"2rem", sm: "2.15rem", md:"2.5rem" }}
+                        mb={{base:"6px", md:"0px"}}
                     />
                     </InputRightElement>
                 </InputGroup>

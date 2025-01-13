@@ -7,7 +7,7 @@ const SearchPage = () => {
   const { searchResults, searchQuery } = useCourseStore();
 
   return (
-    <Container maxW="container.xl" py={8}>
+    <Container maxW="container.xl" py={8} mt={{ base: 6, sm: 7, md: 0}}>
       <VStack spacing={6} align="stretch">
         <Text fontSize="2xl" color="white">
           {searchQuery
