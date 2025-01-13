@@ -98,17 +98,18 @@ const Navbar = () => {
                     !isAuthenticated ? (
                         <HStack spacing={8} alignItems={"center"}>
                             <Button
-                            onClick={() => navigate("/register")}
-                            variant={"link"}
-                            fontSize={{ base:"16", sm:"18"}}
-                            fontWeight={"bold"}
-                            textAlign={"center"}
-                            bg={"gray.900"}
-                            bgGradient={"linear(to-r, orange.400, red.500)"}
-                            bgClip={"text"}
-                            _hover={{bgGradient: "linear(to-r, yellow.400, pink.500)",
-                                transform: "translateY(-5px)"}}
-                            _active={{bg: "gray.900"}}
+                                onClick={() => navigate("/register")}
+                                variant={"link"}
+                                fontSize={{ base:"16", sm:"18"}}
+                                fontWeight={"bold"}
+                                textAlign={"center"}
+                                bg={"gray.900"}
+                                bgGradient={"linear(to-r, orange.400, red.500)"}
+                                bgClip={"text"}
+                                mt={{base: 3, md: 0}}
+                                _hover={{bgGradient: "linear(to-r, yellow.400, pink.500)",
+                                    transform: "translateY(-5px)"}}
+                                _active={{bg: "gray.900"}}
                             >
                                 Register
                             </Button>
@@ -121,6 +122,7 @@ const Navbar = () => {
                                 bg={"gray.900"}
                                 bgGradient={"linear(to-r, orange.400, red.500)"}
                                 bgClip={"text"}
+                                mt={{base: 3, md: 0}}
                                 _hover={{bgGradient: "linear(to-r, yellow.400, pink.500)",
                                     transform: "translateY(-5px)"}}
                                 _active={{bg: "gray.900"}}

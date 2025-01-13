@@ -41,7 +41,7 @@ const CreateCourse = () => {
             <VStack
                 spacing={8}
             >
-                <Heading as={"h1"} size={"2xl"} textAlign={"center"} mb={8} >
+                <Heading as={"h1"} size={"2xl"} textAlign={"center"} mb={8} color="white" >
                     Create new Course
                 </Heading>
 
@@ -49,7 +49,7 @@ const CreateCourse = () => {
                     w={"full"} bg={"gray.800"}
                     p={6} rounded={"lg"} shadow={"md"}
                 >
-                    <VStack spacing={4}>
+                    <VStack spacing={4} color="white">
                         <Input
                             placeholder='Course Title'
                             name='title'

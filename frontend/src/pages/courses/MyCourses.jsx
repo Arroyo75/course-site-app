@@ -43,7 +43,7 @@ const MyCourses = () => {
     <Container maxW="container.xl">
       <VStack spacing={8} mt={{ base: 12, sm: 14, md: 4}} w="full" align="stretch" p={4}>
         <Box>
-            <Heading size="lg" mb={4}>Courses I Created</Heading>
+            <Heading size="lg" color="white" mb={4}>Courses I Created</Heading>
             {userCourses.created.length === 0 ? (
                 <Text color="gray.500">You havent created any courses yet.</Text>
             ) : (
@@ -56,7 +56,7 @@ const MyCourses = () => {
         </Box>
 
         <Box>
-            <Heading size="lg" mb={4}>Enrolled Courses</Heading>
+            <Heading size="lg" mb={4} color="white">Enrolled Courses</Heading>
             {userCourses.enrolled.length === 0 ? (
                 <Text color="gray.500">You havent enrolled in any courses yet.</Text>
             ) : (

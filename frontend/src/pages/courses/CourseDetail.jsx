@@ -112,7 +112,6 @@ const CourseDetailPage = () => {
   }
 
   const sharedButtonStyle = {
-    width: "20vw",
     height: "50px",
     borderRadius: "md",
     textAlign: "center",
@@ -143,6 +142,7 @@ const CourseDetailPage = () => {
                 _hover={{ bg: 'gray.800' }}
                 _active={{ bg: '#2d5382', color: 'gray.900' }}
                 border="1px solid #2d5382"
+                width={{base: '50vw', sm: '35vw', md: '20vw'}}
                 {...sharedButtonStyle}
               >
                 Edit
@@ -154,6 +154,7 @@ const CourseDetailPage = () => {
                 _hover={{ bg: 'gray.800' }}
                 _active={{ bg: '#9a2c2d', color: 'gray.900' }}
                 border="1px solid #9a2c2d"
+                width={{base: '50vw', sm: '35vw', md: '20vw'}}
                 {...sharedButtonStyle}
               >
                 Delete
@@ -167,6 +168,7 @@ const CourseDetailPage = () => {
                 _hover={{ bg: 'gray.800' }}
                 _active={{ bg: '#37a169', color: 'gray.900' }}
                 border="1px solid #37a169"
+                width={{base: '50vw', sm: '35vw', md: '20vw'}}
                 {...sharedButtonStyle}
               >
                 Enroll
@@ -177,6 +179,7 @@ const CourseDetailPage = () => {
                 bg="gray.900" 
                 color="orange.500"
                 border="1px solid #dd6b20"
+                width={{base: '50vw', sm: '35vw', md: '20vw'}}
                 {...sharedButtonStyle}
               >
                 Enrolled
