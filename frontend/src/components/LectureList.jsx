@@ -5,7 +5,7 @@ import { EditIcon, DeleteIcon, DownloadIcon, CheckCircleIcon } from '@chakra-ui/
 import { useLectureStore } from '../store/lectureStore.jsx';
 import { useAuthStore } from '../store/authStore.jsx';
 
-const LectureList = ({ course }) => {
+const LectureList = ({ course, isEnrolled }) => {
 
   const [newLecture, setNewLecture] = useState({
     title: "",
@@ -20,9 +20,9 @@ const LectureList = ({ course }) => {
 
   useEffect(() => {
     if(course?._id) {
-      fetchLectures(course._id, isAuthenticated);
+      fetchLectures(course._id, isEnrolled);
     }
-  }, [course, fetchLectures, isAuthenticated]);
+  }, [course, fetchLectures, isEnrolled]);
 
   const isAuthor = course?.author?._id === user?.id
 
@@ -162,7 +162,7 @@ const LectureList = ({ course }) => {
               <HStack justify="space-between">
                 <Text fontSize="lg" fontWeight="medium" color="orange.300">{lecture.title}</Text>
                 <HStack spacing={3}>
-                  {isAuthenticated && (
+                  {(isEnrolled || isAuthor) && (
                     <HStack spacing={3}>
                       <IconButton
                         icon={<DownloadIcon />}
@@ -213,7 +213,7 @@ const LectureList = ({ course }) => {
               No lectures found
             </Text>
           )}
-          {isAuthenticated && (
+          {isEnrolled && (
             <Flex spacing={4} minW={{ base: "70vw", md: "30vw"}} alignItems="center">
               <Progress 
                   value={completionPercentage} 
@@ -322,7 +322,8 @@ LectureList.propTypes = {
       name: PropTypes.string.isRequired,
       email: PropTypes.string.isRequired
     })
-  })
+  }),
+  isEnrolled: PropTypes.bool.isRequired
 }
 
 export default LectureList;

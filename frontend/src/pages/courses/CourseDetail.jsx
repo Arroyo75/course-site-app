@@ -185,7 +185,7 @@ const CourseDetailPage = () => {
           </VStack>
         </Box>
         <Box width={{base: "100%", md: "50%"}} py={12} px={6} bg="gray.900" color="white" rounded="lg" shadow="lg" display="flex" flexDirection="column" alignItems="center">
-          <LectureList course={course} />
+          <LectureList course={course} isEnrolled={isEnrolled}/>
         </Box>
       </Flex>
     </Box>

@@ -22,12 +22,12 @@ export const useLectureStore = create((set, get) => ({
     set((state) => ({ lectures: [ ...state.lectures, data.data]}));
     return ({ success: true, data: newLecture });
   },
-  fetchLectures: async (cid, isAuthenticated) => {
+  fetchLectures: async (cid, isEnrolled) => {
     const res = await apiFetch(`/api/lectures/${cid}`);
     const data = await res.json();
     set({lectures: data.data});
 
-    if(isAuthenticated) {
+    if(isEnrolled) {
       const progressRes = await apiFetch(`/api/progress/courses/${cid}`);
       const progressData = await progressRes.json();
         
