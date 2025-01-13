@@ -72,7 +72,7 @@ const Navbar = () => {
                 </Text>
 
                 <form onSubmit={handleSearch} style={{ flexGrow: 1 }}>
-                <InputGroup maxW={"500px"} >
+                <InputGroup maxW={"1000px"} >
                     <Input
                     placeholder="Search courses..." 
                     bg="gray.800" 
