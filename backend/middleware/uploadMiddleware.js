@@ -32,6 +32,12 @@ export const handleUploadErrors = (err, req, res, next) => {
             message: err.message
         });
     } else if (err) {
+        if(err.message.includes('Storage limit reached')) {
+            return res.status(400).json({
+                success: false,
+                message: 'Storage limit reached'
+            });
+        }
         return res.status(400).json({
             success: false,
             message: err.message

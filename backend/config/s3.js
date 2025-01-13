@@ -1,4 +1,4 @@
-import { S3Client, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, DeleteObjectCommand, GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
@@ -30,15 +30,41 @@ export const s3Client = new S3Client({
     }
 });
 
+export const countS3Files = async () => {
+    try {
+        const command = new ListObjectsV2Command({
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Prefix: 'lectures/'
+        });
+
+        const response = await s3Client.send(command);
+        return response.Contents?.length || 0;
+    } catch (error) {
+        console.error('Error counting files in S3: ', error);
+    }
+}
+
 export const s3Storage = multerS3({
     s3: s3Client,
     bucket: process.env.AWS_BUCKET_NAME,
     metadata: function (req, file, cb) {
         cb(null, { fieldName: file.fieldname });
     },
-    key: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, 'lectures/' + uniqueSuffix + '-' + file.originalname);
+    key: async function (req, file, cb) {
+        try {
+            const fileCount = await countS3Files();
+            const FILE_LIMIT = 100;
+
+            if(fileCount >= FILE_LIMIT) {
+                cb(new Error('Storage limit reached'));
+                return;
+            }
+
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+            cb(null, 'lectures/' + uniqueSuffix + '-' + file.originalname);
+        } catch (error) {
+            cb(error);
+        }
     }
 });
 
