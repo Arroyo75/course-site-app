@@ -20,7 +20,7 @@ const CourseCard = ({ course }) => {
         h= {48} w='full'
         objectFit='cover' />
       <Box p={4}>
-        <Heading as='h3' size='md' mb={2}>
+        <Heading as='h3' size='md' mb={2} color="white">
           {course.title}
         </Heading>
         <Text fontWeight='bold' fontSize='md' color='gray.100' mb={4}>

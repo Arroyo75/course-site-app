@@ -7,8 +7,8 @@ const SearchPage = () => {
   const { searchResults, searchQuery } = useCourseStore();
 
   return (
-    <Container maxW="container.xl" py={8} mt={{ base: 6, sm: 7, md: 0}}>
-      <VStack spacing={6} align="stretch">
+    <Container maxW='container.xl' py={12} mt={{ base: 6, sm: 7, md: 0}}>
+      <VStack spacing={6}>
         <Text fontSize="2xl" color="white">
           {searchQuery
             ? `Search results for: "${searchQuery}"`
@@ -21,7 +21,7 @@ const SearchPage = () => {
             </Text>
           </Box>
         ) : (
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6} w={"full"}>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={10} w={"full"}>
             {searchResults.map(course => (
               <CourseCard key={course._id} course={course} />
             ))}

@@ -70,12 +70,12 @@ const Login = () => {
 
   return (
     <Box maxW="400px" mx="auto" mt={{ base: 12, sm: 14, md: 8}} p="4" borderWidth="1px" borderRadius="lg">
-      <Heading mb="6" textAlign="center">
+      <Heading mb="6" textAlign="center" color="white">
         Login
       </Heading>
       <form onSubmit={handleSubmit}>
         <VStack spacing="4">
-          <FormControl isRequired>
+          <FormControl isRequired color="white">
             <FormLabel>Email</FormLabel>
             <Input
               type="email"
@@ -85,7 +85,7 @@ const Login = () => {
               onChange={handleChange}
             />
           </FormControl>
-          <FormControl isRequired>
+          <FormControl isRequired color="white">
             <FormLabel>Password</FormLabel>
             <Input
               type="password"
@@ -103,7 +103,7 @@ const Login = () => {
           >
             Log in
           </Button>
-          <Text>
+          <Text color="white">
             Do not have an account?{" "}
             <Button
               variant="link"

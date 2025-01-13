@@ -13,7 +13,7 @@ const LectureList = ({ course, isEnrolled }) => {
   })
 
   const { lectures, fetchLectures, createLecture, deleteLecture, updateLecture, downloadLecture, isLectureCompleted } = useLectureStore();
-  const { user, isAuthenticated } = useAuthStore();
+  const { user } = useAuthStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isUpdating, setIsUpdating] = useState(false); //Manage create/update modal
   const toast = useToast();

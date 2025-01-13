@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Spinner, Text, VStack, SimpleGrid, Heading } from '@chakra-ui/react';
+import { Box, Container, Spinner, Text, VStack, SimpleGrid, Heading } from '@chakra-ui/react';
 import { useCourseStore } from '../../store/courseStore.jsx';
 import CourseCard from '../../components/CourseCard.jsx';
 
@@ -40,7 +40,8 @@ const MyCourses = () => {
   }
 
   return (
-    <VStack spacing={8} mt={{ base: 12, sm: 14, md: 4}} w="full" align="stretch" p={4}>
+    <Container maxW="container.xl">
+      <VStack spacing={8} mt={{ base: 12, sm: 14, md: 4}} w="full" align="stretch" p={4}>
         <Box>
             <Heading size="lg" mb={4}>Courses I Created</Heading>
             {userCourses.created.length === 0 ? (
@@ -66,7 +67,8 @@ const MyCourses = () => {
                 </SimpleGrid>
             )}
         </Box>
-    </VStack>
+      </VStack>
+    </Container>
 );
 }
 

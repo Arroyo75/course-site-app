@@ -84,12 +84,12 @@ const Register = () => {
 
   return (
     <Box maxW="400px" mx="auto" mt={{ base: 12, sm: 14, md: 8}} p="4" borderWidth="1px" borderRadius="lg">
-      <Heading mb="6" textAlign="center">
+      <Heading color="white" mb="6" textAlign="center">
         Register
       </Heading>
       <form onSubmit={handleSubmit}>
         <VStack spacing="4">
-          <FormControl isRequired>
+          <FormControl isRequired color="white">
             <FormLabel>Name</FormLabel>
             <Input
               type="text"
@@ -99,7 +99,7 @@ const Register = () => {
               onChange={handleChange}
             />
           </FormControl>
-          <FormControl isRequired>
+          <FormControl isRequired color="white">
             <FormLabel>Email</FormLabel>
             <Input
               type="email"
@@ -109,7 +109,7 @@ const Register = () => {
               onChange={handleChange}
             />
           </FormControl>
-          <FormControl isRequired>
+          <FormControl isRequired color="white">
             <FormLabel>Password</FormLabel>
             <Input
               type="password"
@@ -127,7 +127,7 @@ const Register = () => {
           >
             Register
           </Button>
-          <Text>
+          <Text color="white">
             Already have an account?{" "}
             <Button
               variant="link"
