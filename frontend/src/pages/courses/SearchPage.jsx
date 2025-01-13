@@ -21,7 +21,7 @@ const SearchPage = () => {
             </Text>
           </Box>
         ) : (
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6} w={"full"}>
             {searchResults.map(course => (
               <CourseCard key={course._id} course={course} />
             ))}
