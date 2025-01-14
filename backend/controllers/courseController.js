@@ -42,18 +42,43 @@ export const createCourse = async (req, res) => {
 };
 
 export const updateCourse = async (req, res) => {
-    const {id} = req.params;
-    const course = req.body;
+    const { id } = req.params;
+    const updates = req.body;
+    
     if(!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({ success: false, message: "Invalid Course Id"});
     }
-
+    if(!updates.title && !updates.description && !updates.image) {
+        return res.status(400).json({ success: false, message: "Please provide at least one field to update"});
+    }
+    
     try {
-        const updatedCourse = await Course.findByIdAndUpdate(id, course, {new: true});
-        res.status(200).json({ success: true, data: updatedCourse});
+        const updateFields = {};
+        if(updates.title) updateFields.title = updates.title;
+        if(updates.description) updateFields.description = updates.description;
+        if(updates.image) updateFields.image = updates.image;
+        
+        const updatedCourse = await Course.findByIdAndUpdate(
+            id,
+            { $set: updateFields },
+            { 
+                new: true,
+                runValidators: true 
+            }
+        ).populate('author');
+        
+        if (!updatedCourse) {
+            return res.status(404).json({ success: false, message: "Course not found" });
+        }
+        
+        res.status(200).json({ 
+            success: true, 
+            message: "Course updated successfully", 
+            data: updatedCourse 
+        });
     } catch (error) {
-        console.log("Error: updating course: ", error.message);
-        res.status(500).json({ success: false, message: "Server error"});
+        console.log("Error updating course: ", error.message);
+        res.status(500).json({ success: false, message: "Server error" });
     }
 };
 

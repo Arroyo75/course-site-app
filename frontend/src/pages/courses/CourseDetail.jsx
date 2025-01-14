@@ -1,17 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Text, Heading, VStack, Flex, Image, Spinner, HStack, Button, useToast } from '@chakra-ui/react';
+import { Box, Text, Heading, VStack, Flex, Image, Spinner, HStack, Button, useToast, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, FormControl, FormLabel, Input, Textarea } from '@chakra-ui/react';
 import { useCourseStore } from '../../store/courseStore.jsx';
 import { useAuthStore } from '../../store/authStore.jsx';
 import LectureList from '../../components/LectureList.jsx';
 
 const CourseDetailPage = () => {
   const { id } = useParams();
-  const { courses, fetchCourses, deleteCourse, enrollInCourse } = useCourseStore();
+  const { courses, fetchCourses, deleteCourse, updateCourse, enrollInCourse } = useCourseStore();
   const { user } = useAuthStore();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEnrolled, setIsEnrolled] = useState(false);
+  const [updateFormData, setUpdateFormData] = useState({
+    title: '',
+    description: '',
+    image: ''
+  });
 
   const toast = useToast();
   const navigate = useNavigate();
@@ -26,6 +32,11 @@ const CourseDetailPage = () => {
 
       if (foundCourse) {
         setCourse(foundCourse);
+        setUpdateFormData({
+          title: foundCourse.title,
+          description: foundCourse.description,
+          image: foundCourse.image
+        })
         if(user) {
           setIsEnrolled(foundCourse.students?.includes(user.id));
         }
@@ -79,8 +90,28 @@ const CourseDetailPage = () => {
     navigate("/");
   }
 
-  const handleEdit = () => {
+  const handleEdit = async (cid) => {
+    const { success, message } = await updateCourse(cid, updateFormData);
 
+    if(!success) {
+      toast({
+        title: 'Error',
+        description: message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true
+      });
+    } else {
+      toast({
+        title: 'Course Updated',
+        description: message,
+        status: 'success',
+        duration: 3000,
+        isClosable: true
+      });
+    }
+    onClose();
+    await fetchCourses();
   }
 
   const handleEnroll = async (cid) => {
@@ -111,6 +142,14 @@ const CourseDetailPage = () => {
     }
   }
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUpdateFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   const sharedButtonStyle = {
     height: "50px",
     borderRadius: "md",
@@ -136,7 +175,7 @@ const CourseDetailPage = () => {
             {isAuthor ? (
               <HStack spacing={4}>
               <Button
-                onClick={handleEdit}
+                onClick={onOpen}
                 bg="gray.900"
                 color="blue.700"
                 _hover={{ bg: 'gray.800' }}
@@ -191,6 +230,56 @@ const CourseDetailPage = () => {
           <LectureList course={course} isEnrolled={isEnrolled}/>
         </Box>
       </Flex>
+      <Modal isOpen={isOpen} onClose={onClose} size="xl">
+        <ModalOverlay />
+        <ModalContent bg="gray.800" color="white">
+          <ModalHeader>Update Course</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <VStack spacing={4}>
+              <FormControl color="white">
+                <FormLabel>Title</FormLabel>
+                <Input 
+                  name="title"
+                  value={updateFormData.title}
+                  onChange={handleInputChange}
+                  bg="gray.700"
+                />
+              </FormControl>
+              <FormControl color="white">
+                <FormLabel>Description</FormLabel>
+                <Textarea
+                  name="description"
+                  value={updateFormData.description}
+                  onChange={handleInputChange}
+                  bg="gray.700"
+                  rows={4}
+                />
+              </FormControl>
+              <FormControl color="white">
+                <FormLabel>Image URL</FormLabel>
+                <Input
+                  name="image"
+                  value={updateFormData.image}
+                  onChange={handleInputChange}
+                  bg="gray.700"
+                />
+              </FormControl>
+            </VStack>
+          </ModalBody>
+
+          <ModalFooter color="white">
+            <Button 
+              colorScheme="blue" 
+              mr={3} 
+              onClick={() => handleEdit(course._id)}
+            >
+              Update
+            </Button>
+            <Button variant="ghost" onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };

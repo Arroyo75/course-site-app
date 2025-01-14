@@ -40,6 +40,28 @@ export const useCourseStore = create((set) => ({
     set(state => ({ courses: state.courses.filter( course => course._id !== cid) }));
     return { success: true, message: data.message }
   },
+  updateCourse: async (cid, formData) => {
+    if(!formData.title && !formData.description && !formData.image) {
+      return { success: false, message: "Please make your change"};
+    }
+
+    console.log(cid);
+    const res = await apiFetch(`/api/courses/${cid}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    });
+    
+    const data = await res.json();
+
+    if(!data.success)
+      return { success: false, message: data.message }
+
+    set(state => ({ courses: state.courses.map(course => course._id === cid ? data.data : course )}));
+    return { success: true, message: data.message }
+  },
   enrollInCourse: async (cid) => {
     const res = await apiFetch(`/api/courses/${cid}/enroll`, {
       method: "POST"
