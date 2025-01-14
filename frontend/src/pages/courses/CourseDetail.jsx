@@ -194,10 +194,10 @@ const CourseDetailPage = () => {
           <VStack spacing={6}>
             <Image src={course.image} alt={course.title} w="full" h={64} objectFit="cover" rounded="lg" />
             <Heading>{course.title}</Heading>
-            <Text fontSize="lg">{course.description}</Text>
             <Text fontSize="md" color="gray.400">
               by {course.author?.name || "Unknown"}
             </Text>
+            <Text fontSize="md">{course.description}</Text>
             {isAuthor ? (
               <HStack spacing={4}>
               <Button
