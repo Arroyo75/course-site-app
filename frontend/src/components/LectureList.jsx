@@ -4,6 +4,7 @@ import { useDisclosure, Flex, useToast, Box, Text, Heading, VStack, Button, HSta
 import { EditIcon, DeleteIcon, DownloadIcon, CheckCircleIcon } from '@chakra-ui/icons';
 import { useLectureStore } from '../store/lectureStore.jsx';
 import { useAuthStore } from '../store/authStore.jsx';
+import { validateInput } from '../utils/validation.jsx';
 
 const LectureList = ({ course, isEnrolled }) => {
 
@@ -29,7 +30,44 @@ const LectureList = ({ course, isEnrolled }) => {
   const getCompletionPercentage = useLectureStore(state => state.getCompletionPercantage);
   const completionPercentage = getCompletionPercentage();
 
+  const validationRules = {
+    title: { min: 3, max: 20 }
+  };
+
+  const validateLecture = (lectureData) => {
+    const { title } = lectureData;
+
+    const titleValidation = validateInput('title', title, validationRules.title);
+    if (titleValidation) {
+        toast({
+            title: "Validation Error",
+            description: titleValidation,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+        });
+        return false;
+    }
+
+    if (lectureData.file && lectureData.file.type !== "application/pdf") {
+        toast({
+            title: "Validation Error",
+            description: "Only PDF files are allowed.",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+        });
+        return false;
+    }
+
+    return true;
+};
+
+  
+
   const handleCreateLecture = async (cid, lectureData) => {
+    if (!validateLecture(lectureData)) return;
+    
     const formData = new FormData();
     formData.append('title', lectureData.title);
     formData.append('lecture', lectureData.file);
@@ -79,6 +117,8 @@ const LectureList = ({ course, isEnrolled }) => {
   }
 
   const handleUpdateLecture = async (lid, lectureData) => {
+    if (!validateLecture(lectureData)) return;
+
     const formData = new FormData();
     formData.append('title', lectureData.title);
     if(lectureData.file) {

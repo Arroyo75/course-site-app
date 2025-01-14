@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, FormControl, FormLabel, Input, Heading, Text, VStack, useToast} from "@chakra-ui/react";
 import { useAuthStore } from "../../store/authStore.jsx";
+import { validateInput } from "../../utils/validation.jsx";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,32 @@ const Register = () => {
   const toast = useToast();
   const navigate = useNavigate();
 
+  const validationRules = {
+    name: { min: 2, max: 50 },
+    email: { max: 100, regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ },
+    password: { min: 6, max: 128 }
+  };
+
+  const handleValidation = () => {
+    let isValid = true;
+
+    Object.keys(formData).forEach((field) => {
+      const error = validateInput(field, formData[field], validationRules[field]);
+      if (error) {
+        isValid = false;
+        toast({
+          title: "Validation Error",
+          description: `${field.charAt(0).toUpperCase() + field.slice(1)}: ${error}`,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    });
+
+    return isValid;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value}));
@@ -21,6 +48,9 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!handleValidation()) return;
+
     setLoading(true);
     try {
       const res = await fetch("/api/auth/register", {
@@ -32,7 +62,6 @@ const Register = () => {
       const data = await res.json();
 
       if (data.success) {
-        // Attempt to log in immediately after registration
         const loginRes = await fetch("/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -45,7 +74,6 @@ const Register = () => {
         const loginData = await loginRes.json();
 
         if (loginData.success) {
-          // Save token and user info in Zustand
           login(loginData.token, loginData.user);
 
           toast({
@@ -56,7 +84,7 @@ const Register = () => {
             isClosable: true,
           });
 
-          navigate("/"); // Redirect to home page
+          navigate("/");
         } else {
           throw new Error("Could not log in after registration");
         }

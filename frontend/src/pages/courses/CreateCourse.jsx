@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Container, VStack, Heading, Box, Input, Button, useToast } from '@chakra-ui/react'
 import { useCourseStore } from '../../store/courseStore.jsx';
+import { validateInput } from '../../utils/validation.jsx';
 
 const CreateCourse = () => {
     const [newCourse, setNewCourse] = useState({
@@ -13,7 +14,33 @@ const CreateCourse = () => {
 
     const { createCourse } = useCourseStore();
 
+    const validationRules = {
+        title: { min: 3, max: 55 },
+        description: { min: 8, max: 300 },
+        image: { max: 255 }
+    };
+
+    const handleValidation = () => {
+        let isValid = true;
+        Object.keys(newCourse).forEach((field) => {
+          const error = validateInput(field, newCourse[field], validationRules[field]);
+          if (error) {
+            isValid = false;
+            toast({
+              title: 'Validation Error',
+              description: error,
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
+          }
+        });
+        return isValid;
+      };
+
     const handleAddCourse = async() => {
+        if (!handleValidation()) return;
+
         const {success, message} = await createCourse(newCourse);
         if(!success) {
             toast({

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Text, Heading, VStack, Flex, Image, Spinner, HStack, Button, useToast, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, FormControl, FormLabel, Input, Textarea } from '@chakra-ui/react';
 import { useCourseStore } from '../../store/courseStore.jsx';
 import { useAuthStore } from '../../store/authStore.jsx';
+import { validateInput } from '../../utils/validation.jsx';
 import LectureList from '../../components/LectureList.jsx';
 
 const CourseDetailPage = () => {
@@ -68,6 +69,30 @@ const CourseDetailPage = () => {
 
   const isAuthor = course.author?._id === user?.id;
 
+  const validationRules = {
+    title: { min: 3, max: 55 },
+    description: { min: 8, max: 300 },
+    image: { max: 255 }
+  };
+
+  const handleValidation = () => {
+    let isValid = true;
+    Object.keys(updateFormData).forEach((field) => {
+      const error = validateInput(field, updateFormData[field], validationRules[field]);
+      if (error) {
+        isValid = false;
+        toast({
+          title: 'Validation Error',
+          description: `${field.charAt(0).toUpperCase() + field.slice(1)}: ${error}`,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    });
+    return isValid;
+  };
+
   const handleDelete = async (cid) => {
     const { success, message } = await deleteCourse(cid);
     if(!success) {
@@ -91,6 +116,7 @@ const CourseDetailPage = () => {
   }
 
   const handleEdit = async (cid) => {
+    if (!handleValidation()) return;
     const { success, message } = await updateCourse(cid, updateFormData);
 
     if(!success) {
