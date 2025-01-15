@@ -1,15 +1,31 @@
-A project for an app that allows users to create their own courses and enroll on courses of other users. I made this app to get a better grasp of web technologies - the MERN full stack.
-Technologies:
-Backend - Node.js Express MongoDb Multer ( for file uploads )
-Frontend - React.js Vite ChakraUI
+Aplikacja Platforma E-learningowa z kursami
 
-Project will include file uploading and downloading, with aws s3 storage. ( not yet implemented )
+Technologie
+Frontend - React, Vite.js, Chakra-UI
+Backend - Node.js Express.js Multer
+Baza Danych - MongoDb
+Storage - Aws S3
 
-How to run:
-Right now site isn't hosted anywhere if you want to check out the project clone repo, then:
-npm run build (to install dependencies)
-npm run start (to start backend server)
-cd frontend
-npm run dev (to run frontend)
+Jak uruchomić:
 
-all the dependencies as well as scripts are listed in package.json
+Uruchomienie lokalne:
+W celu uruchomienia projektu wymagane jest konto na aws s3 oraz atlas mongodb albo odpowiednie zmienne środowiskowe.
+Po sklonowaniu repozytorium i otworzeniu go w Visual Studio Code, komenda:
+	npm run build
+zainstaluje wymagane zależności.
+Przed uruchomieniem serwera należy stworzyć plik .env z następującymi zmiennymi środowiskowymi:
+	PORT - port na którym uruchomi się serwer (domyślnie 5000)
+	MONGO_URI - połączenie z bazą danych mongo
+	JWT_SECRET - sekret json web token, używany do autentykacji
+	AWS_ACCESS_KEY_ID - klucze API do AWS
+	AWS_SECRET_ACCESS_KEY
+	AWS_REGION - region aws
+	AWS_BUCKET_NAME - nazwa s3 bucket
+Następnie można uruchomić serwer:
+	npm run start
+
+Użytkownik może utworzyć konto i się na nie zalogować. Przeglądać kursy oraz ich szczegóły, oraz szukać kursy po tytule, autorze czy opisie. W szczegółach kursu może zobaczyć wykłady kursu.
+Zalogowany użytkownik może tworzyć swoje kursy oraz przeglądać na jakie kursy się zapisał, bądź jakie stworzył oraz zapisać się na kurs.
+Jako autor może usuwać, edytować kursy. Posiada możliwość również tworzenia własnych wykładów, poprzez wrzucanie plików pdf na aws s3, edytowania ich oraz usuwania.
+Zapisany na kurs użytkownik może pobrać pdfa związanego z wykładem.
+Oprócz tego została zapewniona responsywność.
