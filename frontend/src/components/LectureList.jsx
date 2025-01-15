@@ -65,13 +65,13 @@ const LectureList = ({ course, isEnrolled }) => {
 
   
 
-  const handleCreateLecture = async (cid, lectureData) => {
+  const handleCreateLecture = async (lectureData) => {
     if (!validateLecture(lectureData)) return;
     
     const formData = new FormData();
     formData.append('title', lectureData.title);
     formData.append('lecture', lectureData.file);
-    formData.append('course', cid);
+    formData.append('course', course._id);
 
     const { success, message } = await createLecture(formData);
     onClose();
@@ -340,7 +340,7 @@ const LectureList = ({ course, isEnrolled }) => {
                       Update
                     </Button>
                   ) : (
-                    <Button colorScheme='blue' mr={3} onClick={() => handleCreateLecture(course._id, newLecture)} >
+                    <Button colorScheme='blue' mr={3} onClick={() => handleCreateLecture(newLecture)} >
                       Create
                     </Button>
                   )}
