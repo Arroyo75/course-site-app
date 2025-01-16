@@ -17,7 +17,7 @@ const Register = () => {
 
   const validationRules = {
     name: { min: 2, max: 50 },
-    email: { max: 100, regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ },
+    email: { max: 100},
     password: { min: 6, max: 128 }
   };
 
