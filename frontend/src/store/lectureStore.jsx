@@ -16,7 +16,7 @@ export const useLectureStore = create((set, get) => ({
     const data = await res.json();
 
     if(!data.success) {
-      return ({ successs: false, message: data.message })
+      return ({ success: false, message: data.message })
     }
 
     set((state) => ({ lectures: [ ...state.lectures, data.data]}));
