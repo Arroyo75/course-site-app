@@ -29,3 +29,5 @@ Zalogowany użytkownik może tworzyć swoje kursy oraz przeglądać na jakie kur
 Jako autor może usuwać, edytować kursy. Posiada możliwość również tworzenia własnych wykładów, poprzez wrzucanie plików pdf na aws s3, edytowania ich oraz usuwania.
 Zapisany na kurs użytkownik może pobrać pdfa związanego z wykładem.
 Oprócz tego została zapewniona responsywność.
+
+Celem projektu było dla mnie nauczenie się Node.js i polepszenie swojej wiedzy z Reacta
